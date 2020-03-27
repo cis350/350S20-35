@@ -37,11 +37,32 @@ MongoClient.connect(url, function(err, db) {
 
   var myobjs = [ alexandra , divya ];
 
+  var obj = db.db("Hours");
+  var huntsman = {
+    name: "Jon M. Huntsman Hall",
+    hours: "7 am - 2 am",
+  };
+  var drl = {
+    name: "David Rittenhouse Laboratory",
+    hours: "idk have to update",
+  }
+
+  var myobjs = [ huntsman , drl ];
+
+
+
   dbo.collection("user").insertMany(myobjs, function(err, res) {
     if (err) throw err;
     console.log("Number of documents inserted: " + res.insertedCount);
     db.close();
   });
+
+  obj.collection("building").insertMany(myobjs, function(err, res) {
+    if (err) throw err;
+    console.log("Number of documents inserted: " + res.insertedCount);
+    db.close();
+  });
+
 });
 
 //renders homepage
@@ -57,6 +78,11 @@ app.use('/signup', (req, res) => {
 //checks if username is taken, if not signs user up
 app.use('/checksignup', (req, res) => {
   res.render('signup.ejs', {req: req, message: null});
+});
+
+//renders building hours page
+app.use('/buildinghours', (req, res) => {
+  res.render('buildinghours.ejs', {req: req, message: null});
 });
 
 // This starts the web server on port 3000.
