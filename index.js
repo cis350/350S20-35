@@ -65,7 +65,7 @@ MongoClient.connect(url, function(err, db) {
 
 });
 
-//renders homepage
+//renders login
 app.use('/home', (req, res) => {
   res.render('main.ejs', {req: req, message: null});
 });
@@ -78,6 +78,11 @@ app.use('/signup', (req, res) => {
 //checks if username is taken, if not signs user up
 app.use('/checksignup', (req, res) => {
   res.render('signup.ejs', {req: req, message: null});
+});
+
+//renders homepage
+app.use('/checklogin', (req, res) => {
+  res.render('homepage.ejs', {req: req, message: null});
 });
 
 //renders building hours page
