@@ -6,14 +6,17 @@
 	<body>
 		<div class="container">
 			<header>PennBuddies Homepage</header>
-
-			<div>
-				<form method="post" action="/checklogin">
+			<div class="buildinghours">
+				<form method="get" action="/buildinghours">
 					<button type="submit">View Building Hours</button>
-					<button type="submit">View Campus Resources Hours</button>
 				</form>
 			</div>
 
+			<div class="campusresourceshours">
+				<form method="get" action="/campusresourceshours">
+					<button type="submit">View Campus Resources Hours</button>
+				</form>
+			</div>
 		</div>
 	</body>
 </html>

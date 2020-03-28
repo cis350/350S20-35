@@ -90,6 +90,12 @@ app.use('/buildinghours', (req, res) => {
   res.render('buildinghours.ejs', {req: req, message: null});
 });
 
+//renders building hours page
+app.use('/campusresourceshours', (req, res) => {
+  res.render('campusresourceshours.ejs', {req: req, message: null});
+});
+
+
 // This starts the web server on port 3000.
 app.listen(3000, () => {
     console.log('Listening on port 3000');
