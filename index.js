@@ -8,6 +8,7 @@ var url = "mongodb+srv://tannera:cis350squad@pennbuddies-aavlp.mongodb.net/test?
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   var dbo = db.db("people");
+  
   var alexandra = {
     username: "alexandra",
     password: "tanner",
@@ -21,6 +22,7 @@ MongoClient.connect(url, function(err, db) {
     hair: "brown",
     eyes: "hazel"
   };
+
   var divya = {
     username: "divya",
     password: "somayajula",
