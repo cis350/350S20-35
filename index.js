@@ -8,7 +8,6 @@ var url = "mongodb+srv://tannera:cis350squad@pennbuddies-aavlp.mongodb.net/test?
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   var dbo = db.db("people");
-  
   var alexandra = {
     username: "alexandra",
     password: "tanner",
@@ -22,7 +21,6 @@ MongoClient.connect(url, function(err, db) {
     hair: "brown",
     eyes: "hazel"
   };
-
   var divya = {
     username: "divya",
     password: "somayajula",
@@ -39,14 +37,35 @@ MongoClient.connect(url, function(err, db) {
 
   var myobjs = [ alexandra , divya ];
 
+  var obj = db.db("Hours");
+  var huntsman = {
+    name: "Jon M. Huntsman Hall",
+    hours: "7 am - 2 am",
+  };
+  var drl = {
+    name: "David Rittenhouse Laboratory",
+    hours: "idk have to update",
+  }
+
+  var myobjs = [ huntsman , drl ];
+
+
+
   dbo.collection("user").insertMany(myobjs, function(err, res) {
     if (err) throw err;
     console.log("Number of documents inserted: " + res.insertedCount);
     db.close();
   });
+
+  obj.collection("building").insertMany(myobjs, function(err, res) {
+    if (err) throw err;
+    console.log("Number of documents inserted: " + res.insertedCount);
+    db.close();
+  });
+
 });
 
-//renders homepage
+//renders login
 app.use('/home', (req, res) => {
   res.render('main.ejs', {req: req, message: null});
 });
@@ -60,6 +79,22 @@ app.use('/signup', (req, res) => {
 app.use('/checksignup', (req, res) => {
   res.render('signup.ejs', {req: req, message: null});
 });
+
+//renders homepage
+app.use('/checklogin', (req, res) => {
+  res.render('homepage.ejs', {req: req, message: null});
+});
+
+//renders building hours page
+app.use('/buildinghours', (req, res) => {
+  res.render('buildinghours.ejs', {req: req, message: null});
+});
+
+//renders building hours page
+app.use('/campusresourceshours', (req, res) => {
+  res.render('campusresourceshours.ejs', {req: req, message: null});
+});
+
 
 // This starts the web server on port 3000.
 app.listen(3000, () => {

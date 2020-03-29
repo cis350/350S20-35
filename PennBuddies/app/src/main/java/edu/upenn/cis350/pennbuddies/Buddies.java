@@ -1,5 +1,6 @@
 package edu.upenn.cis350.pennbuddies;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -65,5 +66,10 @@ public class Buddies extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void onViewBuildingHoursButtonClick(View v) {
+        Intent intent = new Intent(this, BuildingHoursActivity.class);
+        startActivity(intent);
     }
 }
