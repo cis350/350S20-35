@@ -111,8 +111,70 @@ app.post('/checklogin', (req, res) => {
 });
 
 //renders edit profile page
-app.use('/editprofile', (req, res) => {
+app.get('/editprofile', (req, res) => {
   res.render('editprofile.ejs', {req: req, message: null});
+});
+
+//gets profile data
+app.get('/getprofile', (req, res) => {
+  var user = req.session.currUser;
+  people = database.db("people");
+
+  var query = { username: user};
+
+  people.collection("user").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.json({ profile: result[0] });
+    } else {
+      res.redirect("/editprofile?message=Could not load profile");
+    }
+  });
+});
+
+//updates profile
+app.post('/checkeditprofile', (req, res) => {
+  var user = req.session.currUser;
+  people = database.db("people");
+
+  var query = { username: user };
+
+  people.collection("user").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var newValues = req.body;
+      var vals = (JSON.stringify(newValues)).split(',');
+
+      var valString = "{ ";
+      for (var i = 0; i < vals.length; i++) {
+        console.log("vals[i]: " + vals[i]);
+        var vs = vals[i].split(':');
+
+        if (vs[1].length != 2 && vals[i].charAt(0) == '{') {
+          valString = vs[0].substring(1, vs[0].length) + ":" + vs[1] + ",";
+        } else if (vs[1].length != 3 && vals[i].endsWith('}')) {
+          valString += vs[0].substring(0, vs[0].length) + ":" + vs[1].substring(0, vs[1].length - 1);
+        } else if (vals[i].endsWith('}')) {
+          valString = valString.substring(0, valString.length - 1);
+        } else if (vs[1].length != 2) {
+          valString += vs[0].substring(0, vs[0].length) + ":" + vs[1] + ",";
+        }
+      }
+      valString += " }";
+
+      var myobj = { $set: JSON.parse(valString) };
+
+      people.collection("user").updateOne(query, myobj, function(err, result2) {
+        if (err) throw err;
+        console.log(user + " updated");
+        res.redirect("/editprofile");
+      });
+    } else {
+      res.redirect("/?message=Could not find user");
+    }
+  });
 });
 
 //renders building hours page
