@@ -1,16 +1,26 @@
 package edu.upenn.cis350.pennbuddies;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.view.View.OnClickListener;
+import android.view.MenuItem;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import android.view.View;
-
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.auth.StitchAuth;
+import com.mongodb.stitch.android.core.auth.StitchUser;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -24,7 +34,6 @@ import android.view.Menu;
 public class Buddies extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +41,7 @@ public class Buddies extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,6 +49,7 @@ public class Buddies extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -57,7 +68,28 @@ public class Buddies extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.buddies, menu);
-        return true;
+//        return true;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e("Selection:", "Menu");
+        int id = item.getItemId();
+        if (id == R.id.logout) {
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        StitchUser user;
+        final StitchAppClient client = Stitch.getAppClient(getString(R.string.stitch_client_app_id));
+        StitchAuth auth = client.getAuth();
+        startActivity(new Intent(Buddies.this, MainActivity.class));
+        auth.logout();
+        Log.e("logout?", "Logout succeeded");
     }
 
     @Override
