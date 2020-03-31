@@ -7,10 +7,18 @@
 		<div class="container">
 			<header>PennBuddies</header>
 
-			<div>
+			<div class="displayerrormessage">
+				<%if (req.query.message != null) { %>
+						<div>
+							<%= req.query.message %>
+						</div>
+				<% } %>
+			</div>
+
+			<div class="checklogin">
 				<form method="post" action="/checklogin">
 					<input type="text" name="username" size="20" placeholder="Username"><br>
-					<input type="password" name="password" size="20" placeholder="Password"><br>
+					<input type="text" name="password" size="20" placeholder="Password"><br>
 					<button type="submit">Login</button>
 				</form>
 			</div>

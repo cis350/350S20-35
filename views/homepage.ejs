@@ -6,6 +6,19 @@
 	<body>
 		<div class="container">
 			<header>PennBuddies Homepage</header>
+
+			<div class="displayuser">
+				<%if (req.session.currUser != null) { %>
+      		<%=req.session.currUser%>
+      	<% } %>
+			</div>
+
+			<div class="editprofile">
+				<form method="get" action="/editprofile">
+					<button type="submit">Edit Profile</button>
+				</form>
+			</div>
+
 			<div class="buildinghours">
 				<form method="get" action="/buildinghours">
 					<button type="submit">View Building Hours</button>
@@ -15,6 +28,12 @@
 			<div class="campusresourceshours">
 				<form method="get" action="/campusresourceshours">
 					<button type="submit">View Campus Resources Hours</button>
+				</form>
+			</div>
+
+			<div class="logout">
+				<form method="get" action="/logout">
+					<button type="submit">Logout</button>
 				</form>
 			</div>
 		</div>

@@ -98,4 +98,9 @@ public class Buddies extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    public void onViewBuildingHoursButtonClick(View v) {
+        Intent intent = new Intent(this, BuildingHoursActivity.class);
+        startActivity(intent);
+    }
 }
