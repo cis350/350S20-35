@@ -71,10 +71,18 @@ app.post('/checksignup', (req, res) => {
   var phone = req.body.phone;
   var email = req.body.email;
 
+  console.log("req.body: " + req.body);
+  console.log("JSON.stringify(req.body): " + JSON.stringify(req.body));
+  console.log("{username : username, friends : []}: " + ({username : username, friends : []}));
+  var friendsentry = {username : username, friends : []};
+
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
       throw err;
     } else if (result == "" && id != "" && username != "" && password != "" && name != "" && phone != "" && email != "") {
+      people.collection("friends").insertOne(friendsentry, function(err, result2) {
+        if (err) throw err;
+      });
       people.collection("user").insertOne(req.body, function(err, result2) {
         if (err) throw err;
         console.log(username + " signed up");
@@ -173,6 +181,73 @@ app.post('/checkeditprofile', (req, res) => {
       });
     } else {
       res.redirect("/?message=Could not find user");
+    }
+  });
+});
+
+//renders edit profile page
+app.post('/addfriend', (req, res) => {
+  people = database.db("people");
+
+  var user = req.session.currUser;
+  var friend = req.body.friend;
+
+  var query1 = {username : user};
+  var query2 = {username : friend};
+
+  people.collection("friends").find(query1).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+      friends.push(friend);
+
+      var friendsList = { $set: {friends : friends} };
+
+      people.collection("friends").updateOne(query1, friendsList, function(err, result2) {
+        if (err) throw err;
+      });
+    } else {
+      console.log(username + " username taken");
+      res.redirect("/signup?message=User already exists or not all fields inputted.");
+    }
+  });
+
+  people.collection("friends").find(query2).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+      friends.push(user);
+
+      var friendsList = { $set: {friends : friends} };
+
+      people.collection("friends").updateOne(query2, friendsList, function(err, result2) {
+        if (err) throw err;
+      });
+    } else {
+      console.log(username + " username taken");
+      res.redirect("/signup?message=User already exists or not all fields inputted.");
+    }
+  });
+
+  res.redirect("/");
+});
+
+//gets list of friends
+app.use('/getfriends', (req, res) => {
+  people = database.db("people");
+
+  var user = req.session.currUser;
+  var query = { username: user};
+
+  people.collection("friends").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.json({ profile: result[0] });
+    } else {
+      res.redirect("/?message=Could not get friends");
     }
   });
 });
