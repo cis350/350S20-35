@@ -8,21 +8,14 @@
 			<header>Campus Building Hours</header>
 
 			<div class="getBuildings">
+		 <% buildings.forEach((building) => { %>
+			 <a href="/building/<%= building._id %>" class="item">
+				 <h4 class="name" type ="text">Building Name: <%= building.name %></h4>
+				 <h4 class="location" type ="text">Address: <%= building.location %></h4>
+				 <h4 class="hours" type ="text">Operating Hours: <%= building.hours %></h4>
 
-
-
-
-				<script>
-							 buildings.forEach(building => {
-								 document.getElementById("buildings").innerHTML= JSON.stringify(buildings);
-									<div> Building Name: document.getElementById("name").innerHTML </div>
-									<div> Building Hours: building.hours </div>
-									<div> Building Location: building.location </div>
-									<div> Building ID: building._id </div>
-							});
-					 </script>
-
-
+			 </a>
+		 <% }) %>
 	 </div>
 
 
