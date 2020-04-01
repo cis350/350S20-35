@@ -6,8 +6,12 @@
 	<body>
 		<div class="container">
 			<header>Campus Resources Hours</header>
-			<div>
-				<b>These are the campus resources</b>
+			<div class="campusresourceshours">
+				<form method="post" action="/buildinghours">
+					<input type="text" name="name" size="20" placeholder="Campus Resource"><br>
+					<input type="text" name="hours" size="20" placeholder="Operating Hours"><br>
+					<input type="text" name="location" size="20" placeholder="Address"><br>
+				</form>
 			</div>
 		</div>
 	</body>

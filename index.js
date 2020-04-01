@@ -267,17 +267,18 @@ app.get('/buildinghours', (req, res, next) => {
 //  var hours = req.name.hours;
 //  var location = req.name.location;
 
-var resultArray = [];
+var buildingArray = [];
   MongoClient.connect(url, function(err, db){
     theBuildings = database.db("Hours");
     assert.equal(null, err);
-    var cursor = theBuildings.collection('building').find();
-    cursor.forEach(function(doc, err){
+    var pointer = theBuildings.collection('building').find();
+    pointer.forEach(function(doc, err){
       assert.equal(null, err);
-      resultArray.push(doc);
+      buildingArray.push(doc);
     }, function(){
       db.close();
-      res.render('buildinghours.ejs', {lol: resultArray});
+      console.log(buildingArray);
+      res.render('buildinghours.ejs', {buildings: buildingArray});
     });
   });
 
