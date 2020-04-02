@@ -1,5 +1,6 @@
 package edu.upenn.cis350.pennbuddies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -33,7 +35,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 
+import edu.upenn.cis350.pennbuddies.ui.home.HomeFragment;
+
 public class Buddies extends AppCompatActivity {
+    DrawerLayout drawer;
+    NavigationView navigationView;
+    ActionBarDrawerToggle drawerToggle;
+    Context context = this.getBaseContext();
 
     String username;
     String email;
@@ -59,23 +67,25 @@ public class Buddies extends AppCompatActivity {
             }
         });
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_home, R.id.nav_hours, R.id.nav_onDutyPolice, R.id.nav_tools,
+                R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        stitchClient = Stitch.getDefaultAppClient();
-        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
-//        purchasesCollection = mongoClient.getDatabase("store").getCollection("purchases");
-        
+//
+//        stitchClient = Stitch.getDefaultAppClient();
+//        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+////        purchasesCollection = mongoClient.getDatabase("store").getCollection("purchases");
+//
+//        initInstances();
     }
 
     @Override
@@ -112,8 +122,36 @@ public class Buddies extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void onViewBuildingHoursButtonClick(View v) {
-        Intent intent = new Intent(this, BuildingHoursActivity.class);
-        startActivity(intent);
-    }
+//    private void initInstances() {
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(drawerToggle);
+//
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(MenuItem menuItem) {
+//                int id = menuItem.getItemId();
+//                Intent intent;
+//                switch (id) {
+//                    case R.id.nav_home:
+//                        intent = new Intent(getApplicationContext(), HomeFragment.class);
+//                        startActivity(intent);
+//                        break;
+//                    case R.id.nav_hours:
+//                        intent = new Intent(getApplicationContext(), BuildingHoursActivity.class);
+//                        startActivity(intent);
+//                        break;
+//                    case R.id.nav_onDutyPolice:
+//                        intent = new Intent(getApplicationContext(), OnDutyPoliceActivity.class);
+//                        startActivity(intent);
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
+//
+//    }
 }

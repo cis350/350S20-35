@@ -2,16 +2,57 @@
 <html>
 	<head>
 		<title>PennBuddies Homepage</title>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+		<script>
+      $(document).ready(function() {
+        updateFriends();
+      })
+
+      function updateFriends() {
+        $.get("/getfriends", function(data) {
+          var friends = data.profile.friends;
+
+          var string = '<div class="friends-list"><ul>';
+
+					for (var i = 0; i < friends.length; i++) {
+						string += '<li>' + friends[i] + '</li>';
+					}
+
+          string = string + "</div>";
+          $("#friends-block").html(string);
+					window.setTimeout(updateFriends, 10000);
+        });
+      }
+    </script>
 	</head>
 	<body>
 		<div class="container">
-			<header>PennBuddies Homepage</header>
+			<h1>PennBuddies Homepage</h1>
 
 			<div class="displayuser">
 				<%if (req.session.currUser != null) { %>
-      		<%=req.session.currUser%>
+      		<h2><%=req.session.currUser%></h2>
       	<% } %>
 			</div>
+
+			<div id="friends-display">
+				<br>
+				<h4>Friends:</h4>
+				<div id="friends-block" onload="updateFriends()">
+				</div>
+			</div>
+
+			<br>
+
+			<div class="addfriend">
+				<form method="post" action="/addfriend">
+					<h4>Add Friend:</h4>
+					<input type="text" name="friend" size="20" placeholder="Search Friend"><br>
+					<button type="submit">Add Friend</button>
+				</form>
+			</div>
+
+			<br>
 
 			<div class="editprofile">
 				<form method="get" action="/editprofile">
@@ -19,17 +60,23 @@
 				</form>
 			</div>
 
+			<br>
+
 			<div class="buildinghours">
 				<form method="get" action="/buildinghours">
 					<button type="submit">View Building Hours</button>
 				</form>
 			</div>
 
+			<br>
+
 			<div class="campusresourceshours">
 				<form method="get" action="/campusresourceshours">
 					<button type="submit">View Campus Resources Hours</button>
 				</form>
 			</div>
+
+			<br>
 
 			<div class="logout">
 				<form method="get" action="/logout">

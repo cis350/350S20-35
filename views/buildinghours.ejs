@@ -6,9 +6,22 @@
 	<body>
 		<div class="container">
 			<header>Campus Building Hours</header>
-			<div>
-				<b>Huntsman Hall</b>
-			</div>
+
+			<div class="getBuildings">
+		 <% buildings.forEach((building) => { %>
+			 <a href="/building/<%= building._id %>" class="item">
+				 <h4 class="name" type ="text">Building Name: <%= building.name %></h4>
+				 <h4 class="location" type ="text">Address: <%= building.location %></h4>
+				 <h4 class="hours" type ="text">Operating Hours: <%= building.hours %></h4>
+
+			 </a>
+		 <% }) %>
+	 </div>
+
+
+
+
+
 		</div>
 	</body>
 </html>

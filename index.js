@@ -10,6 +10,7 @@ app.use(bodyParser.text({ type: 'text/html' }));
 app.use(session({resave: true, secret:"top-secret", saveUninitialized: true}));
 
 var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
 var url = "mongodb+srv://tannera:cis350squad@pennbuddies-aavlp.mongodb.net/test?retryWrites=true&w=majority";
 
 var database;
@@ -17,6 +18,8 @@ var database;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   database = db;
+  //var obj = db.db("Hours");
+
 
   //the code was adding the buildings to the database everytime I run it so I commented it out
 
@@ -71,10 +74,18 @@ app.post('/checksignup', (req, res) => {
   var phone = req.body.phone;
   var email = req.body.email;
 
+  console.log("req.body: " + req.body);
+  console.log("JSON.stringify(req.body): " + JSON.stringify(req.body));
+  console.log("{username : username, friends : []}: " + ({username : username, friends : []}));
+  var friendsentry = {username : username, friends : []};
+
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
       throw err;
     } else if (result == "" && id != "" && username != "" && password != "" && name != "" && phone != "" && email != "") {
+      people.collection("friends").insertOne(friendsentry, function(err, result2) {
+        if (err) throw err;
+      });
       people.collection("user").insertOne(req.body, function(err, result2) {
         if (err) throw err;
         console.log(username + " signed up");
@@ -177,15 +188,107 @@ app.post('/checkeditprofile', (req, res) => {
   });
 });
 
+//renders edit profile page
+app.post('/addfriend', (req, res) => {
+  people = database.db("people");
+
+  var user = req.session.currUser;
+  var friend = req.body.friend;
+
+  var query1 = {username : user};
+  var query2 = {username : friend};
+
+  people.collection("friends").find(query1).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+      friends.push(friend);
+
+      var friendsList = { $set: {friends : friends} };
+
+      people.collection("friends").updateOne(query1, friendsList, function(err, result2) {
+        if (err) throw err;
+      });
+    } else {
+      console.log(username + " username taken");
+      res.redirect("/signup?message=User already exists or not all fields inputted.");
+    }
+  });
+
+  people.collection("friends").find(query2).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+      friends.push(user);
+
+      var friendsList = { $set: {friends : friends} };
+
+      people.collection("friends").updateOne(query2, friendsList, function(err, result2) {
+        if (err) throw err;
+      });
+    } else {
+      console.log(username + " username taken");
+      res.redirect("/signup?message=User already exists or not all fields inputted.");
+    }
+  });
+
+  res.redirect("/");
+});
+
+//gets list of friends
+app.use('/getfriends', (req, res) => {
+  people = database.db("people");
+
+  var user = req.session.currUser;
+  var query = { username: user};
+
+  people.collection("friends").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.json({ profile: result[0] });
+    } else {
+      res.redirect("/?message=Could not get friends");
+    }
+  });
+});
+
+
 //renders building hours page
-app.use('/buildinghours', (req, res) => {
-  res.render('buildinghours.ejs', {req: req, message: null});
+app.get('/buildinghours', (req, res, next) => {
+//  buildings = database.db("hours");
+//  var query = { name: building };
+
+  //people = database.db("Hours");
+
+//  var buildingName = req.name;
+//  var hours = req.name.hours;
+//  var location = req.name.location;
+
+var buildingArray = [];
+  MongoClient.connect(url, function(err, db){
+    theBuildings = database.db("Hours");
+    assert.equal(null, err);
+    var pointer = theBuildings.collection('building').find();
+    pointer.forEach(function(doc, err){
+      assert.equal(null, err);
+      buildingArray.push(doc);
+    }, function(){
+      db.close();
+      console.log(buildingArray);
+      res.render('buildinghours.ejs', {buildings: buildingArray});
+    });
+  });
+
 });
 
 //renders building hours page
 app.use('/campusresourceshours', (req, res) => {
   res.render('campusresourceshours.ejs', {req: req, message: null});
 });
+
 
 //logs out
 app.get('/logout', (req, res) => {

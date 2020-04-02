@@ -14,13 +14,13 @@
     <fragment
         android:id="@+id/nav_gallery"
         android:name="edu.upenn.cis350.pennbuddies.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:label="@string/menu_hours"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="edu.upenn.cis350.pennbuddies.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:label="@string/menu_onDutyPolice"
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
