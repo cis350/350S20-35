@@ -18,6 +18,24 @@ import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.auth.StitchUser;
 import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential;
+
+//MongoDB Service Packages
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+// Utility Packages
+import com.mongodb.stitch.core.internal.common.BsonUtils;
+
+// Stitch Sync Packages
+import com.mongodb.stitch.core.services.mongodb.remote.sync.ChangeEventListener;
+import com.mongodb.stitch.core.services.mongodb.remote.sync.DefaultSyncConflictResolvers;
+import com.mongodb.stitch.core.services.mongodb.remote.sync.ErrorListener;
+
+// MongoDB Mobile Local Database Packages
+import com.mongodb.stitch.android.services.mongodb.local.LocalMongoDbService;
+
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +43,8 @@ import android.util.Log;
 import android.text.TextUtils;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+
+
 
 
 public class MainActivity extends AppCompatActivity {

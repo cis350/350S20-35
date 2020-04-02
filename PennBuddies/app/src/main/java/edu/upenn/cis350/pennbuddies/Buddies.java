@@ -23,6 +23,8 @@ import com.mongodb.stitch.android.core.auth.StitchAuth;
 import com.mongodb.stitch.android.core.auth.StitchUser;
 
 import com.google.android.material.navigation.NavigationView;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -32,6 +34,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 
 public class Buddies extends AppCompatActivity {
+
+    String username;
+    String email;
+
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection itemsCollection;
 
     private AppBarConfiguration mAppBarConfiguration;
     @Override
@@ -62,6 +71,11 @@ public class Buddies extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        stitchClient = Stitch.getDefaultAppClient();
+        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+//        purchasesCollection = mongoClient.getDatabase("store").getCollection("purchases");
+        
     }
 
     @Override
