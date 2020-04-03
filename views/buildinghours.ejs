@@ -64,6 +64,7 @@
 			        <li><a href="#">Profile</a></li>
 			        <li><a href="#">History</a></li>
 			        <li><a href="/campusresourceshours">Resources</a></li>
+							<li><a href="https://www.facilities.upenn.edu/maps">Campus Map!</a></li>
 			      </ul>
 						<ul class="nav navbar-nav navbar-right">
 							<%if (req.session.currUser != null) { %>
@@ -82,7 +83,6 @@
 			      <h1>Campus Building Hours</h1>
 
 						<div class="getBuildings">
-							<a href="https://www.facilities.upenn.edu/maps">Click here for Campus Map!</a> <br />
 					 <% buildings.forEach((building) => { %>
 						 <a href="/building/<%= building._id %>" class="item">
 							 <a href=<%= building.url %>>  <font size="+2"><%= building.name %></font></a>
