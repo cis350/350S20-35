@@ -98,6 +98,11 @@ app.get('/editprofile', (req, res) => {
   res.render('editprofile.ejs', {req: req, message: null});
 });
 
+//renders profile page
+app.get('/loadprofile', (req, res) => {
+  res.render('loadprofile.ejs', {req: req, message: null});
+});
+
 //gets profile data
 app.get('/getprofile', (req, res) => {
   var people = database.db("people");
@@ -250,7 +255,7 @@ var buildingArray = [];
     }, function(){
       db.close();
       console.log(buildingArray);
-      res.render('buildinghours.ejs', {buildings: buildingArray});
+      res.render('buildinghours.ejs', {req: req, buildings: buildingArray});
     });
   });
 

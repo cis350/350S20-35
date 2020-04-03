@@ -11,8 +11,8 @@
 			.container-fluid {
 				padding-right: 0;
 				padding-left: 0;
-				margin-right: auto;
-				margin-left: auto;
+				margin-right: 0;
+				margin-left: 0;
 			}
 
 			/* Remove the navbar's default margin-bottom and rounded borders */
@@ -23,18 +23,9 @@
 				width: 100%;
 	    }
 
-	    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-	    .row.content {
-				height: 550px;
-				width: 100%;
+			.navbar-custom .navbar-brand, .navbar-custom .navbar-text {
+				color: white;
 			}
-
-	    /* Set gray background color and 100% height */
-	    .sidenav {
-	      padding-top: 20px;
-	      background-color: #99CCFF;
-	      height: 100%;
-	    }
 
 	    /* Set black background color, white text and some padding */
 	    footer {
@@ -58,7 +49,7 @@
 	</head>
 	<body>
 		<div class="container-fluid">
-			<nav class="navbar navbar-inverse">
+			<nav class="navbar navbar-custom">
 			  <div class="container-fluid">
 			    <div class="navbar-header">
 			      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -66,12 +57,12 @@
 			        <span class="icon-bar"></span>
 			        <span class="icon-bar"></span>
 			      </button>
-			      <a class="navbar-brand" href="#">PennBuddies</a>
+			      <a class="navbar-brand" href="/">PennBuddies</a>
 			    </div>
 			    <div class="collapse navbar-collapse" id="myNavbar">
 			      <ul class="nav navbar-nav">
-			        <li class="active"><a href="#">Home</a></li>
-			        <li><a href="#">Profile</a></li>
+			        <li class="active"><a href="/">Home</a></li>
+			        <li><a href="/loadprofile">Profile</a></li>
 			        <li><a href="#">History</a></li>
 			        <li><a href="/campusresourceshours">Resources</a></li>
 			      </ul>
@@ -81,10 +72,8 @@
 
 			<div class="container-fluid text-center">
 			  <div class="row content">
-					<div class="col-sm-2 sidenav">
-			    </div>
-
-			    <div class="col-sm-8 text-left">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-8 text-left">
 			      <h1>PennBuddies</h1>
 
 						<div class="displayerrormessage">
@@ -97,21 +86,27 @@
 
 						<div class="checklogin">
 							<form method="post" action="/checklogin">
-								<input type="text" name="username" size="20" placeholder="Username"><br>
-								<input type="text" name="password" size="20" placeholder="Password"><br>
-								<button type="submit">Login</button>
+								<div class="form-group">
+									<div class="input-group">
+		    						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+    								<input id="username" type="text" class="form-control" name="username" placeholder="Username">
+  								</div>
+  								<div class="input-group">
+    								<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+    								<input id="password" type="password" class="form-control" name="password" placeholder="Password">
+  								</div>
+									<button type="submit" class="btn btn-primary">Login</button>
+								</div>
 							</form>
 						</div>
 
 						<div class="signup">
 							<form method="get" action="/signup">
-								<button type="submit">Signup</button>
+								<button type="submit" class="btn btn-link">Signup</button>
 							</form>
 						</div>
 			    </div>
-
-					<div class="col-sm-2 sidenav">
-			    </div>
+					<div class="col-sm-2"></div>
 			  </div>
 			</div>
 		</div>
