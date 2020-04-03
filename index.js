@@ -18,33 +18,34 @@ var database;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   database = db;
-  //var obj = db.db("Hours");
+  var obj = db.db("Hours");
 
 
   //the code was adding the buildings to the database everytime I run it so I commented it out
 
-  // var huntsman = {
-  //   name: "Jon M. Huntsman Hall",
-  //   hours: "7 am - 2 am",
-  // };
-  // var drl = {
-  //   name: "David Rittenhouse Laboratory",
-  //   hours: "idk have to update",
-  // }
+   var cohen = {
+     name: "Claudia Cohen Hall",
+     hours: "8 am - 10 pm, Weekend Hours May Vary",
+     location: "249 South 36th Street Philadelphia PA, 19104",
+   };
+   var ARCH = {
+     name: "the ARCH",
+     hours: "8 am - 12 am, Weekend Hours May Vary",
+     location: "3601 Locust Walk, Philadelphia, PA 19104",
+   }
 
-  // var myobjs2 = [ huntsman , drl ];
-  //
-  // dbo.collection("user").insertMany(myobjs, function(err, res) {
-  //   if (err) throw err;
-  //   console.log("Number of documents inserted: " + res.insertedCount);
+   var myobjs2 = [ nineteenTwenty , ARCH ];
+
+   //dbo.collection("user").insertMany(myobjs, function(err, res) {
+//     console.log("Number of documents inserted: " + res.insertedCount);
   //   db.close();
   // });
-  //
-  // obj.collection("building").insertMany(myobjs2, function(err, res) {
-  //   if (err) throw err;
-  //   console.log("Number of documents inserted: " + res.insertedCount);
-  //   db.close();
-  // });
+
+   obj.collection("building").insertMany(myobjs2, function(err, res) {
+     if (err) throw err;
+     console.log("Number of documents inserted: " + res.insertedCount);
+     db.close();
+   });
 
 });
 
