@@ -83,12 +83,16 @@
 			    <div class="col-sm-8 text-left">
 			      <h1>Campus Resources Hours</h1>
 
-						<div class="campusresourceshours">
-								<input type="text" name="name" size="20" placeholder="Campus Resource"><br>
-								<input type="text" name="hours" size="20" placeholder="Operating Hours"><br>
-								<input type="text" name="location" size="20" placeholder="Address"><br>
-							</form>
-						</div>
+						<div class="getResources">
+					 <% campusResources.forEach((campusResource) => { %>
+						 <a href="/campusResource/<%= campusResource._id %>" class="item">
+							 <a href=<%= campusResource.url %>>  <font size="+2"><%= campusResource.Name %></font></a>
+							 <h4 class="location" type ="text">Address: <%= campusResource.location %></h4>
+							 <h4 class="hours" type ="text">Operating Hours: <%= campusResource.hours %></h4> </br>
+
+						 </a>
+					 <% }) %>
+				 </div>
 
 					</div>
 					<div class="col-sm-2"></div>
