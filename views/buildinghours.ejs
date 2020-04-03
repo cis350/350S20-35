@@ -82,9 +82,10 @@
 			      <h1>Campus Building Hours</h1>
 
 						<div class="getBuildings">
+							<a href="https://www.facilities.upenn.edu/maps">Click here for Campus Map!</a> <br />
 					 <% buildings.forEach((building) => { %>
 						 <a href="/building/<%= building._id %>" class="item">
-							 <h4 class="name" type ="text">Building Name: <%= building.name %></h4>
+							 <a href=<%= building.url %>>  <font size="+2"><%= building.name %></font></a>
 							 <h4 class="location" type ="text">Address: <%= building.location %></h4>
 							 <h4 class="hours" type ="text">Operating Hours: <%= building.hours %></h4>
 
