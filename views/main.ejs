@@ -1,33 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<title>PennBuddies</title>
+		<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<style>
+			/* Remove the navbar's default margin-bottom and rounded borders */
+	    .navbar {
+	      margin-bottom: 0;
+	      border-radius: 0;
+				width: 100%;
+	    }
+
+	    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+	    .row.content {
+				height: 550px;
+				width: 100%;
+			}
+
+	    /* Set gray background color and 100% height */
+	    .sidenav {
+	      padding-top: 20px;
+	      background-color: #f1f1f1;
+	      height: 100%;
+	    }
+
+	    /* Set black background color, white text and some padding */
+	    footer {
+	      background-color: #555;
+	      color: white;
+	      padding: 15px;
+				position: absolute;
+  			bottom: 0;
+  			width: 100%;
+	    }
+
+	    /* On small screens, set height to 'auto' for sidenav and grid */
+	    @media screen and (max-width: 767px) {
+	      .sidenav {
+	        height: auto;
+	        padding: 15px;
+	      }
+	      .row.content {height:auto;}
+	    }
+	  </style>
 	</head>
 	<body>
 		<div class="container">
-			<header>PennBuddies</header>
+			<nav class="navbar navbar-inverse">
+			  <div class="container-fluid">
+			    <div class="navbar-header">
+			      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			      </button>
+			      <a class="navbar-brand" href="#">PennBuddies</a>
+			    </div>
+			    <div class="collapse navbar-collapse" id="myNavbar">
+			      <ul class="nav navbar-nav">
+			        <li class="active"><a href="#">Home</a></li>
+			        <li><a href="#">Profile</a></li>
+			        <li><a href="#">History</a></li>
+			        <li><a href="#">Resources</a></li>
+			      </ul>
+			    </div>
+			  </div>
+			</nav>
 
-			<div class="displayerrormessage">
-				<%if (req.query.message != null) { %>
-						<div>
-							<%= req.query.message %>
+			<div class="container-fluid text-center">
+			  <div class="row content">
+					<div class="col-sm-2 sidenav">
+			    </div>
+
+			    <div class="col-sm-8 text-left">
+			      <h1>PennBuddies</h1>
+
+						<div class="displayerrormessage">
+							<%if (req.query.message != null) { %>
+									<div>
+										<%= req.query.message %>
+									</div>
+							<% } %>
 						</div>
-				<% } %>
-			</div>
 
-			<div class="checklogin">
-				<form method="post" action="/checklogin">
-					<input type="text" name="username" size="20" placeholder="Username"><br>
-					<input type="text" name="password" size="20" placeholder="Password"><br>
-					<button type="submit">Login</button>
-				</form>
-			</div>
+						<div class="checklogin">
+							<form method="post" action="/checklogin">
+								<input type="text" name="username" size="20" placeholder="Username"><br>
+								<input type="text" name="password" size="20" placeholder="Password"><br>
+								<button type="submit">Login</button>
+							</form>
+						</div>
 
-			<div class="signup">
-				<form method="get" action="/signup">
-					<button type="submit">Signup</button>
-				</form>
+						<div class="signup">
+							<form method="get" action="/signup">
+								<button type="submit">Signup</button>
+							</form>
+						</div>
+			    </div>
+
+					<div class="col-sm-2 sidenav">
+			    </div>
+			  </div>
 			</div>
 		</div>
+
+		<footer class="container-fluid text-center">
+		  <p>Alexandra Tanner, Avni Ahuji, Divya Somayajula, Harshini Thinakaran</p>
+		</footer>
 	</body>
 </html>
