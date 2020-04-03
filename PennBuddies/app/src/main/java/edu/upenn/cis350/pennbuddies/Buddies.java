@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.view.MenuItem;
-
+import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -38,6 +38,7 @@ import android.view.Menu;
 import edu.upenn.cis350.pennbuddies.ui.home.HomeFragment;
 
 public class Buddies extends AppCompatActivity {
+    LinearLayout profile;
     DrawerLayout drawer;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
@@ -86,6 +87,20 @@ public class Buddies extends AppCompatActivity {
 ////        purchasesCollection = mongoClient.getDatabase("store").getCollection("purchases");
 //
 //        initInstances();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerview = navigationView.getHeaderView(0);
+        TextView email = headerview.findViewById(R.id.nav_title);
+        email.setText("GET EMAIL FROM DATABASE");
+        LinearLayout header = (LinearLayout) headerview.findViewById(R.id.header);
+        header.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent picture_intent = new Intent(Buddies.this, Profile.class);
+                startActivity(picture_intent);
+//                Toast.makeText(Buddies.this, "SHOWIGN PROFILE", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
