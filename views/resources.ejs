@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<title>PennBuddies Homepage</title>
+		<title>PennBuddies Building Hours</title>
 		<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -16,7 +16,7 @@
 			}
 
 			/* Remove the navbar's default margin-bottom and rounded borders */
-			.navbar {
+	    .navbar {
 				background-color: #003366;
 				margin-bottom: 0;
 	      border-radius: 0;
@@ -46,28 +46,6 @@
 	      .row.content {height:auto;}
 	    }
 	  </style>
-		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-		<script>
-      $(document).ready(function() {
-        updateFriends();
-      })
-
-      function updateFriends() {
-        $.get("/getfriends", function(data) {
-          var friends = data.profile.friends;
-
-          var string = '<div class="friends-list"><ul class="list-group">';
-
-					for (var i = 0; i < friends.length; i++) {
-						string += '<li class="list-group-item">' + friends[i] + '</li>';
-					}
-
-          string = string + "</ul></div>";
-          $("#friends-block").html(string);
-					window.setTimeout(updateFriends, 10000);
-        });
-      }
-    </script>
 	</head>
 	<body>
 		<div class="container-fluid">
@@ -85,7 +63,7 @@
 			      <ul class="nav navbar-nav">
 			        <li class="active"><a href="/">Home</a></li>
 			        <li><a href="/loadprofile">Profile</a></li>
-							<li><a href="/loadhistory">History</a></li>
+			        <li><a href="/loadhistory">History</a></li>
 			        <li><a href="/loadresources">Resources</a></li>
 			      </ul>
 						<ul class="nav navbar-nav navbar-right">
@@ -102,32 +80,23 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 			    <div class="col-sm-8 text-left">
-			      <h1>Home</h1>
+			      <h1>Resources</h1>
 
-						<div class="displayerrormessage">
-							<%if (req.query.message != null) { %>
-									<div>
-										<%= req.query.message %>
-									</div>
-							<% } %>
-						</div>
-
-						<div id="friends-display">
-							<br>
-							<h4>Friends:</h4>
-							<div id="friends-block" onload="updateFriends()">
-							</div>
-						</div>
-
-						<div class="addfriend">
-							<form method="post" action="/addfriend">
-								<div class="form-group">
-									<h4>Add Friend:</h4>
-  								<input type="text" name="friend" size="20" placeholder="Search Friend" class="form-control" id="add">
-									<button type="submit" class="btn btn-primary">Add Friend</button>
-								</div>
+						<div class="buildinghours">
+							<form method="get" action="/buildinghours">
+								<button type="submit" class="btn btn-primary">View Building Hours</button>
 							</form>
 						</div>
+
+						<br>
+
+						<div class="campusresourceshours">
+							<form method="get" action="/campusresourceshours">
+								<button type="submit" class="btn btn-primary">View Campus Resources Hours</button>
+							</form>
+						</div>
+						
+				 </div>
 
 					</div>
 					<div class="col-sm-2"></div>

@@ -266,6 +266,16 @@ app.use('/campusresourceshours', (req, res) => {
   res.render('campusresourceshours.ejs', {req: req, message: null});
 });
 
+//renders walking history page
+app.use('/loadhistory', (req, res) => {
+  res.render('history.ejs', {req: req, message: null});
+});
+
+//renders resources page
+app.use('/loadresources', (req, res) => {
+  res.render('resources.ejs', {req: req, message: null});
+});
+
 
 //logs out
 app.get('/logout', (req, res) => {
