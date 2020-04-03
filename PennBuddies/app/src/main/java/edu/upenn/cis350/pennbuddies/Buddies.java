@@ -1,7 +1,10 @@
 package edu.upenn.cis350.pennbuddies;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +37,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.View;
+
+//notifications
+
+import androidx.core.app.NotificationCompat;
+import android.app.PendingIntent;
 
 import edu.upenn.cis350.pennbuddies.ui.home.HomeFragment;
 
@@ -98,9 +107,32 @@ public class Buddies extends AppCompatActivity {
             public void onClick(View v) {
                 Intent picture_intent = new Intent(Buddies.this, Profile.class);
                 startActivity(picture_intent);
-//                Toast.makeText(Buddies.this, "SHOWIGN PROFILE", Toast.LENGTH_SHORT).show();
             }
         });
+
+    }
+
+    //notifications
+    public void sendNotification(View v) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this);
+
+        //Create the intent that’ll fire when the user taps the notification//
+
+        Intent intent = new Intent(this, Profile.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        mBuilder.setContentIntent(pendingIntent);
+
+        mBuilder.setSmallIcon(R.drawable.ic_profile_trips);
+        mBuilder.setContentTitle("My notification");
+        mBuilder.setContentText("Hello World!");
+
+        NotificationManager mNotificationManager =
+
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(001, mBuilder.build());
     }
 
     @Override

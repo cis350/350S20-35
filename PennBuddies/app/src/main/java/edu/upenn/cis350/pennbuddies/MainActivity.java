@@ -44,7 +44,10 @@ import android.text.TextUtils;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-
+//notifications
+import android.os.Build;
+import android.app.NotificationManager;
+import android.app.NotificationChannel;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -101,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+
+
     }
 
     private void attemptLogin() {

@@ -179,6 +179,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/edit_button"
         android:layout_width="440dp"
         android:layout_height="55dp"
         android:layout_gravity="center_horizontal"
