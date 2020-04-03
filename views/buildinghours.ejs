@@ -60,10 +60,11 @@
 			    </div>
 			    <div class="collapse navbar-collapse" id="myNavbar">
 			      <ul class="nav navbar-nav">
-			        <li class="active"><a href="/">Home</a></li>
-			        <li><a href="/loadprofile">Profile</a></li>
-							<li><a href="/loadhistory">History</a></li>
-			        <li><a href="/loadresources">Resources</a></li>
+			        <li class="active"><a href="#">Home</a></li>
+			        <li><a href="#">Profile</a></li>
+			        <li><a href="#">History</a></li>
+			        <li><a href="/campusresourceshours">Resources</a></li>
+							<li><a href="https://www.facilities.upenn.edu/maps">Campus Map!</a></li>
 			      </ul>
 						<ul class="nav navbar-nav navbar-right">
 							<%if (req.session.currUser != null) { %>
@@ -84,7 +85,7 @@
 						<div class="getBuildings">
 					 <% buildings.forEach((building) => { %>
 						 <a href="/building/<%= building._id %>" class="item">
-							 <h4 class="name" type ="text">Building Name: <%= building.name %></h4>
+							 <a href=<%= building.url %>>  <font size="+2"><%= building.name %></font></a>
 							 <h4 class="location" type ="text">Address: <%= building.location %></h4>
 							 <h4 class="hours" type ="text">Operating Hours: <%= building.hours %></h4>
 

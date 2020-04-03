@@ -1,18 +1,21 @@
 package edu.upenn.cis350.pennbuddies;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.view.MenuItem;
-
+import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,6 +28,8 @@ import com.mongodb.stitch.android.core.auth.StitchAuth;
 import com.mongodb.stitch.android.core.auth.StitchUser;
 
 import com.google.android.material.navigation.NavigationView;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -32,14 +37,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.View;
+
+//notifications
+
+import androidx.core.app.NotificationCompat;
+import android.app.PendingIntent;
 
 import edu.upenn.cis350.pennbuddies.ui.home.HomeFragment;
 
 public class Buddies extends AppCompatActivity {
+    LinearLayout profile;
     DrawerLayout drawer;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     Context context = this.getBaseContext();
+
+    String username;
+    String email;
+
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection itemsCollection;
 
     private AppBarConfiguration mAppBarConfiguration;
     @Override
@@ -70,8 +89,50 @@ public class Buddies extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        initInstances();
 
+//
+//        stitchClient = Stitch.getDefaultAppClient();
+//        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+////        purchasesCollection = mongoClient.getDatabase("store").getCollection("purchases");
+//
+//        initInstances();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerview = navigationView.getHeaderView(0);
+        TextView email = headerview.findViewById(R.id.nav_title);
+        email.setText("GET EMAIL FROM DATABASE");
+        LinearLayout header = (LinearLayout) headerview.findViewById(R.id.header);
+        header.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent picture_intent = new Intent(Buddies.this, Profile.class);
+                startActivity(picture_intent);
+            }
+        });
+
+    }
+
+    //notifications
+    public void sendNotification(View v) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this);
+
+        //Create the intent that’ll fire when the user taps the notification//
+
+        Intent intent = new Intent(this, Profile.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        mBuilder.setContentIntent(pendingIntent);
+
+        mBuilder.setSmallIcon(R.drawable.ic_profile_trips);
+        mBuilder.setContentTitle("My notification");
+        mBuilder.setContentText("Hello World!");
+
+        NotificationManager mNotificationManager =
+
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(001, mBuilder.build());
     }
 
     @Override
@@ -108,36 +169,36 @@ public class Buddies extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void initInstances() {
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(drawerToggle);
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                Intent intent;
-                switch (id) {
-                    case R.id.nav_home:
-                        intent = new Intent(getApplicationContext(), HomeFragment.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.nav_hours:
-                        intent = new Intent(getApplicationContext(), BuildingHoursActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.nav_onDutyPolice:
-                        intent = new Intent(getApplicationContext(), OnDutyPoliceActivity.class);
-                        startActivity(intent);
-                        break;
-                }
-                return false;
-            }
-        });
-
-    }
+//    private void initInstances() {
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(drawerToggle);
+//
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(MenuItem menuItem) {
+//                int id = menuItem.getItemId();
+//                Intent intent;
+//                switch (id) {
+//                    case R.id.nav_home:
+//                        intent = new Intent(getApplicationContext(), HomeFragment.class);
+//                        startActivity(intent);
+//                        break;
+//                    case R.id.nav_hours:
+//                        intent = new Intent(getApplicationContext(), BuildingHoursActivity.class);
+//                        startActivity(intent);
+//                        break;
+//                    case R.id.nav_onDutyPolice:
+//                        intent = new Intent(getApplicationContext(), OnDutyPoliceActivity.class);
+//                        startActivity(intent);
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
+//
+//    }
 }
