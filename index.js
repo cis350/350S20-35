@@ -18,35 +18,6 @@ var database;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   database = db;
-  var obj = db.db("Hours");
-
-
-  //the code was adding the buildings to the database everytime I run it so I commented it out
-
-   var cohen = {
-     name: "Claudia Cohen Hall",
-     hours: "8 am - 10 pm, Weekend Hours May Vary",
-     location: "249 South 36th Street Philadelphia PA, 19104",
-   };
-   var ARCH = {
-     name: "the ARCH",
-     hours: "8 am - 12 am, Weekend Hours May Vary",
-     location: "3601 Locust Walk, Philadelphia, PA 19104",
-   }
-
-   var myobjs2 = [ nineteenTwenty , ARCH ];
-
-   //dbo.collection("user").insertMany(myobjs, function(err, res) {
-//     console.log("Number of documents inserted: " + res.insertedCount);
-  //   db.close();
-  // });
-
-   obj.collection("building").insertMany(myobjs2, function(err, res) {
-     if (err) throw err;
-     console.log("Number of documents inserted: " + res.insertedCount);
-     db.close();
-   });
-
 });
 
 //renders homepage
@@ -65,7 +36,7 @@ app.get('/signup', (req, res) => {
 
 //checks if username is taken, if not signs user up
 app.post('/checksignup', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var query = { username: req.body.username };
   var id = req.body._id;
@@ -103,7 +74,7 @@ app.post('/checksignup', (req, res) => {
 
 //renders homepage if login is correct
 app.post('/checklogin', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var query = { username: req.body.username,password: req.body.password };
   var username = req.body.username;
@@ -129,9 +100,9 @@ app.get('/editprofile', (req, res) => {
 
 //gets profile data
 app.get('/getprofile', (req, res) => {
-  var user = req.session.currUser;
-  people = database.db("people");
+  var people = database.db("people");
 
+  var user = req.session.currUser;
   var query = { username: user};
 
   people.collection("user").find(query).toArray(function(err, result) {
@@ -147,9 +118,9 @@ app.get('/getprofile', (req, res) => {
 
 //updates profile
 app.post('/checkeditprofile', (req, res) => {
-  var user = req.session.currUser;
-  people = database.db("people");
+  var people = database.db("people");
 
+  var user = req.session.currUser;
   var query = { username: user };
 
   people.collection("user").find(query).toArray(function(err, result) {
@@ -191,7 +162,7 @@ app.post('/checkeditprofile', (req, res) => {
 
 //renders edit profile page
 app.post('/addfriend', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var user = req.session.currUser;
   var friend = req.body.friend;
@@ -240,7 +211,7 @@ app.post('/addfriend', (req, res) => {
 
 //gets list of friends
 app.use('/getfriends', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var user = req.session.currUser;
   var query = { username: user};
