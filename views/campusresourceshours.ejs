@@ -2,16 +2,101 @@
 <html>
 	<head>
 		<title>PennBuddies Campus Resources Hours</title>
+		<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<style>
+			.container-fluid {
+				padding-right: 0;
+				padding-left: 0;
+				margin-right: 0;
+				margin-left: 0;
+			}
+
+			/* Remove the navbar's default margin-bottom and rounded borders */
+	    .navbar {
+				background-color: #003366;
+				margin-bottom: 0;
+	      border-radius: 0;
+				width: 100%;
+	    }
+
+			.navbar-custom .navbar-brand, .navbar-custom .navbar-text {
+				color: white;
+			}
+
+	    /* Set black background color, white text and some padding */
+	    footer {
+	      background-color: #003366;
+	      color: white;
+	      padding: 15px;
+				position: absolute;
+  			bottom: 0;
+  			width: 100%;
+	    }
+
+	    /* On small screens, set height to 'auto' for sidenav and grid */
+	    @media screen and (max-width: 767px) {
+	      .sidenav {
+	        height: auto;
+	        padding: 15px;
+	      }
+	      .row.content {height:auto;}
+	    }
+	  </style>
 	</head>
 	<body>
-		<div class="container">
-			<header>Campus Resources Hours</header>
-			<div class="campusresourceshours">
-					<input type="text" name="name" size="20" placeholder="Campus Resource"><br>
-					<input type="text" name="hours" size="20" placeholder="Operating Hours"><br>
-					<input type="text" name="location" size="20" placeholder="Address"><br>
-				</form>
+		<div class="container-fluid">
+			<nav class="navbar navbar-custom">
+			  <div class="container-fluid">
+			    <div class="navbar-header">
+			      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			      </button>
+			      <a class="navbar-brand" href="#">PennBuddies</a>
+			    </div>
+			    <div class="collapse navbar-collapse" id="myNavbar">
+			      <ul class="nav navbar-nav">
+			        <li class="active"><a href="#">Home</a></li>
+			        <li><a href="#">Profile</a></li>
+			        <li><a href="#">History</a></li>
+			        <li><a href="/campusresourceshours">Resources</a></li>
+			      </ul>
+						<ul class="nav navbar-nav navbar-right">
+							<%if (req.session.currUser != null) { %>
+								<p class="navbar-text"><%=req.session.currUser%></p>
+								<li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+							<% } %>
+						</ul>
+			    </div>
+			  </div>
+			</nav>
+
+			<div class="container-fluid text-center">
+			  <div class="row content">
+					<div class="col-sm-2"></div>
+			    <div class="col-sm-8 text-left">
+			      <h1>Campus Resources Hours</h1>
+
+						<div class="campusresourceshours">
+								<input type="text" name="name" size="20" placeholder="Campus Resource"><br>
+								<input type="text" name="hours" size="20" placeholder="Operating Hours"><br>
+								<input type="text" name="location" size="20" placeholder="Address"><br>
+							</form>
+						</div>
+
+					</div>
+					<div class="col-sm-2"></div>
 			</div>
 		</div>
+		</div>
+
+		<footer class="container-fluid text-center">
+		  <p>Alexandra Tanner, Avni Ahuji, Divya Somayajula, Harshini Thinakaran</p>
+		</footer>
 	</body>
 </html>

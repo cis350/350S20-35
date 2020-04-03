@@ -18,34 +18,6 @@ var database;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   database = db;
-  //var obj = db.db("Hours");
-
-
-  //the code was adding the buildings to the database everytime I run it so I commented it out
-
-  // var huntsman = {
-  //   name: "Jon M. Huntsman Hall",
-  //   hours: "7 am - 2 am",
-  // };
-  // var drl = {
-  //   name: "David Rittenhouse Laboratory",
-  //   hours: "idk have to update",
-  // }
-
-  // var myobjs2 = [ huntsman , drl ];
-  //
-  // dbo.collection("user").insertMany(myobjs, function(err, res) {
-  //   if (err) throw err;
-  //   console.log("Number of documents inserted: " + res.insertedCount);
-  //   db.close();
-  // });
-  //
-  // obj.collection("building").insertMany(myobjs2, function(err, res) {
-  //   if (err) throw err;
-  //   console.log("Number of documents inserted: " + res.insertedCount);
-  //   db.close();
-  // });
-
 });
 
 //renders homepage
@@ -64,7 +36,7 @@ app.get('/signup', (req, res) => {
 
 //checks if username is taken, if not signs user up
 app.post('/checksignup', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var query = { username: req.body.username };
   var id = req.body._id;
@@ -102,7 +74,7 @@ app.post('/checksignup', (req, res) => {
 
 //renders homepage if login is correct
 app.post('/checklogin', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var query = { username: req.body.username,password: req.body.password };
   var username = req.body.username;
@@ -126,11 +98,16 @@ app.get('/editprofile', (req, res) => {
   res.render('editprofile.ejs', {req: req, message: null});
 });
 
+//renders profile page
+app.get('/loadprofile', (req, res) => {
+  res.render('loadprofile.ejs', {req: req, message: null});
+});
+
 //gets profile data
 app.get('/getprofile', (req, res) => {
-  var user = req.session.currUser;
-  people = database.db("people");
+  var people = database.db("people");
 
+  var user = req.session.currUser;
   var query = { username: user};
 
   people.collection("user").find(query).toArray(function(err, result) {
@@ -146,9 +123,9 @@ app.get('/getprofile', (req, res) => {
 
 //updates profile
 app.post('/checkeditprofile', (req, res) => {
-  var user = req.session.currUser;
-  people = database.db("people");
+  var people = database.db("people");
 
+  var user = req.session.currUser;
   var query = { username: user };
 
   people.collection("user").find(query).toArray(function(err, result) {
@@ -190,7 +167,7 @@ app.post('/checkeditprofile', (req, res) => {
 
 //renders edit profile page
 app.post('/addfriend', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var user = req.session.currUser;
   var friend = req.body.friend;
@@ -239,7 +216,7 @@ app.post('/addfriend', (req, res) => {
 
 //gets list of friends
 app.use('/getfriends', (req, res) => {
-  people = database.db("people");
+  var people = database.db("people");
 
   var user = req.session.currUser;
   var query = { username: user};
@@ -278,7 +255,7 @@ var buildingArray = [];
     }, function(){
       db.close();
       console.log(buildingArray);
-      res.render('buildinghours.ejs', {buildings: buildingArray});
+      res.render('buildinghours.ejs', {req: req, buildings: buildingArray});
     });
   });
 
