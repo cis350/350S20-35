@@ -114,25 +114,27 @@ public class Buddies extends AppCompatActivity {
 
     //notifications
     public void sendNotification(View v) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this);
+        startActivity(new Intent(Buddies.this, BuildingHoursActivity.class));
 
-        //Create the intent that’ll fire when the user taps the notification//
-
-        Intent intent = new Intent(this, Profile.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        mBuilder.setContentIntent(pendingIntent);
-
-        mBuilder.setSmallIcon(R.drawable.ic_profile_trips);
-        mBuilder.setContentTitle("My notification");
-        mBuilder.setContentText("Hello World!");
-
-        NotificationManager mNotificationManager =
-
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        mNotificationManager.notify(001, mBuilder.build());
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(this);
+//
+//        //Create the intent that’ll fire when the user taps the notification//
+//
+//        Intent intent = new Intent(this, Profile.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//
+//        mBuilder.setContentIntent(pendingIntent);
+//
+//        mBuilder.setSmallIcon(R.drawable.ic_profile_trips);
+//        mBuilder.setContentTitle("My notification");
+//        mBuilder.setContentText("Hello World!");
+//
+//        NotificationManager mNotificationManager =
+//
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        mNotificationManager.notify(001, mBuilder.build());
     }
 
     @Override

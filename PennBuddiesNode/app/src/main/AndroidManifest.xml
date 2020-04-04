@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.upenn.cis350.pennbuddies">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    package="edu.upenn.cis350.pennbuddiesnode">
 
     <application
         android:allowBackup="true"
@@ -12,12 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Profile"></activity>
-        <activity
-            android:name=".Buddies"
-            android:label="@string/title_activity_buddies"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,8 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BuildingHoursActivity" />
-        <activity android:name=".OnDutyPoliceActivity" />
     </application>
 
 </manifest>
