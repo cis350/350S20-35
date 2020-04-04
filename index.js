@@ -261,9 +261,34 @@ var buildingArray = [];
 
 });
 
-//renders building hours page
-app.use('/campusresourceshours', (req, res) => {
-  res.render('campusresourceshours.ejs', {req: req, message: null});
+//renders campus resource hours page
+app.get('/campusresourceshours', (req, res, next) => {
+  var campusResourceArray = [];
+    MongoClient.connect(url, function(err, db){
+      theResources = database.db("Hours");
+      assert.equal(null, err);
+      var pointer = theResources.collection('campus resources').find();
+      pointer.forEach(function(doc, err){
+        assert.equal(null, err);
+        campusResourceArray.push(doc);
+      }, function(){
+        db.close();
+        console.log(campusResourceArray);
+        res.render('campusresourceshours.ejs', {req: req, campusResources: campusResourceArray});
+      });
+    });
+
+
+});
+
+//renders walking history page
+app.use('/loadhistory', (req, res) => {
+  res.render('history.ejs', {req: req, message: null});
+});
+
+//renders resources page
+app.use('/loadresources', (req, res) => {
+  res.render('resources.ejs', {req: req, message: null});
 });
 
 

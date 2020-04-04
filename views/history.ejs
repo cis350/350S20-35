@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>PennBuddies Campus Resources Hours</title>
+		<title>PennBuddies Building Hours</title>
 		<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -81,17 +81,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 			    <div class="col-sm-8 text-left">
-			      <h1>Campus Resources Hours</h1>
-
-						<div class="getResources">
-					 <% campusResources.forEach((campusResource) => { %>
-						 <a href="/campusResource/<%= campusResource._id %>" class="item">
-							 <a href=<%= campusResource.url %>>  <font size="+2"><%= campusResource.Name %></font></a>
-							 <h4 class="location" type ="text">Address: <%= campusResource.location %></h4>
-							 <h4 class="hours" type ="text">Operating Hours: <%= campusResource.hours %></h4> </br>
-
-						 </a>
-					 <% }) %>
+			      <h1>History</h1>
 				 </div>
 
 					</div>
