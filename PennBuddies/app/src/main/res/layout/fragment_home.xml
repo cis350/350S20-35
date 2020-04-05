@@ -21,7 +21,7 @@
         android:id="@+id/buttonHours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="sendHoursNotification"
+        android:onClick="buildingHours"
         android:text="Building Hours"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,18 @@
         app:layout_constraintTop_toBottomOf="@+id/text_home"
         app:layout_constraintVertical_bias="0.500" />
 
-
+    <Button
+        android:id="@+id/testNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testNotifications"
+        android:text="Test Notifications"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_home"
+        app:layout_constraintVertical_bias="0.617" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

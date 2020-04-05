@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
+
+
     }
 
     private void attemptLogin() {
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         if (abort) {
             focus.requestFocus();
         } else {
-            new letsLogin().execute(emailText,passwordText);
+            new letsLogin().execute(emailText, passwordText);
         }
     }
 
