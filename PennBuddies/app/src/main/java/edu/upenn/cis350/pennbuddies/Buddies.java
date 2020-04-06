@@ -45,6 +45,7 @@ import androidx.core.app.NotificationCompat;
 import android.app.PendingIntent;
 
 import edu.upenn.cis350.pennbuddies.ui.home.HomeFragment;
+import android.app.Notification;
 
 public class Buddies extends AppCompatActivity {
     LinearLayout profile;
@@ -112,27 +113,49 @@ public class Buddies extends AppCompatActivity {
 
     }
 
-    //notifications
-    public void sendNotification(View v) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this);
+    public void buildingHours(View v) {
+        startActivity(new Intent(Buddies.this, BuildingHoursActivity.class));
+    }
 
-        //Create the intent that’ll fire when the user taps the notification//
+    public void sendPoliceNotification(View v){
+        startActivity(new Intent(Buddies.this, OnDutyPoliceActivity.class));
+    }
 
-        Intent intent = new Intent(this, Profile.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+    public void sendMapsNotification(View v){
+        startActivity(new Intent(Buddies.this, MapsActivity.class));
+    }
 
-        mBuilder.setContentIntent(pendingIntent);
+    public void testNotifications(View v) {
 
-        mBuilder.setSmallIcon(R.drawable.ic_profile_trips);
-        mBuilder.setContentTitle("My notification");
-        mBuilder.setContentText("Hello World!");
+//        NotificationCompat.Builder notificationBuilder =
+//                new NotificationCompat.Builder(this)
+//                        .setSmallIcon(R.drawable.login_logo)
+//                        .setChannelId(NotificationChannel.DEFAULT_CHANNEL_ID)
+//                        .setContentTitle("Your buddy is almost there!")
+//                        .setContentText("Divya is 2 minutes away.");
+//        NotificationManager notificationManager = (NotificationManager) getSystemService
+//                (Context.NOTIFICATION_SERVICE);
+//        notificationManager.notify(1, notificationBuilder.build());
 
         NotificationManager mNotificationManager =
-
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("YOUR_CHANNEL_ID",
+                    "YOUR_CHANNEL_NAME",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("YOUR_NOTIFICATION_CHANNEL_DESCRIPTION");
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
+                .setSmallIcon(R.drawable.logo) // notification icon
+                .setContentTitle("Your buddy is almost there!") // title for notification
+                .setContentText("Divya is 2 minutes away.")// message for notification
+                .setAutoCancel(true); // clear notification after click
+        Intent intent = new Intent(getApplicationContext(), Buddies.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pi);
+        mNotificationManager.notify(0, mBuilder.build());
 
-        mNotificationManager.notify(001, mBuilder.build());
     }
 
     @Override

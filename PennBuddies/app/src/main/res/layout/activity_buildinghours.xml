@@ -250,12 +250,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Hours of Operation: " />
-
-            <TextView
                 android:id = "@+id/hoursText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

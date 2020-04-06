@@ -60,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        final StitchAppClient client = Stitch.getAppClient(getString(R.string.stitch_client_app_id));
+        StitchAppClient client = Stitch.getAppClient("pennbuddies-yoero");
         currentUser = client.getAuth().getUser();
         if(currentUser != null){
             Log.e("active user?", "already logged in");
@@ -106,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
+
+
     }
 
     private void attemptLogin() {
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         if (abort) {
             focus.requestFocus();
         } else {
-            new letsLogin().execute(emailText,passwordText);
+            new letsLogin().execute(emailText, passwordText);
         }
     }
 

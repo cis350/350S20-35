@@ -4,9 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.local.LocalMongoDbService;
+
+import org.bson.BsonString;
+import org.bson.Document;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class BuildingHoursActivity extends AppCompatActivity {
 
@@ -19,35 +33,34 @@ public class BuildingHoursActivity extends AppCompatActivity {
     }
 
     public void on1920CommonsClick(View v) {
-        view.setText("10 AM - 1 PM, 5 PM - 9 PM");
-    }
+        view.setText("Breakfast/Lunch: 11:30 am - 1:30 pm, Dinner : 5 pm - 7 pm");}
 
     public void onArchClick(View v){
-        view.setText("8 AM - 12 AM");
+        view.setText("M - TH : 8:15 am - 12 am, F : 8:15 am - 10 pm, SS : 10 am - 10 pm");
     }
 
     public void onCohenClick(View v){
-        view.setText("8 AM - 10 PM");
+        view.setText("M - F : 8 am - 10 pm, Closed on Weekends");
     }
 
     public void onFaginClick(View v){
-        view.setText("7 AM - 11 PM");
+        view.setText("7 am - 11 pm, Weekend Hours May Vary");
     }
 
     public void onBookstoreClick(View v){
-        view.setText("8:30 AM - 9:30 PM");
+        view.setText("8:30 am - 9:30 pm");
     }
 
     public void onCollegeClick(View v){
-        view.setText("7 AM - 6:30 PM");
+        view.setText("M - F : 7 am - 6:30 pm, Closed on Weekends");
     }
 
     public void onDRLClick(View v){
-        view.setText("8 AM - 9 PM");
+        view.setText("M - TH : 9 am - 11 pm, F : 9 am - 7 pm, SS : 12 pm - 10 pm");
     }
 
     public void onFisherClick(View v){
-        view.setText("8:30 AM - 12 AM");
+        view.setText("M - F : 9 am - 5 pm, Closed on Weekends");
     }
 
     public void onHighRiseClick(View v){
@@ -59,7 +72,7 @@ public class BuildingHoursActivity extends AppCompatActivity {
     }
 
     public void onHoustonClick(View v){
-        view.setText("8 AM - 7 PM");
+        view.setText("M - TH : 8 am - 6 pm, F : 8 am - 3:30 pm, Closed on Weekends");
     }
 
     public void onHospitalClick(View v){
@@ -79,7 +92,7 @@ public class BuildingHoursActivity extends AppCompatActivity {
     }
 
     public void onLeidyClick(View v){
-        view.setText("8 AM - 9:30 PM");
+        view.setText("M - F : 7:30 am - 8:30 pm, Closed on Weekends");
     }
 
     public void onMcNeilClick(View v){
@@ -95,7 +108,7 @@ public class BuildingHoursActivity extends AppCompatActivity {
     }
 
     public void onPottruckClick(View v){
-        view.setText("8 AM - 10 PM");
+        view.setText("6 am - 11:30 pm");
     }
 
     public void onQuadClick(View v){
@@ -107,7 +120,7 @@ public class BuildingHoursActivity extends AppCompatActivity {
     }
 
     public void onSinghClick(View v){
-        view.setText("8 AM - 7 PM");
+        view.setText("M - F : 8 am - 7 pm");
     }
 
     public void onSkirkanichClick(View v) {
@@ -119,6 +132,6 @@ public class BuildingHoursActivity extends AppCompatActivity {
     }
 
     public void onVPClick(View v){
-        view.setText("8:30 AM - 12 AM");
+        view.setText("Open 24 hours");
     }
 }

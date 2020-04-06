@@ -5,8 +5,8 @@
     <string name="title_activity_buddies">Buddies</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="username">username</string>
-    <string name="email">email@school.upenn.edu</string>
+    <string name="usernamePlaceholder">username</string>
+    <string name="emailPlaceholder">email@school.upenn.edu</string>
     <string name="nav_header_title">PennBuddies</string>
     <string name="nav_header_subtitle">Menu</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -24,4 +24,5 @@
         <item>Afternoon</item>
         <item>Evening</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="username">avniahuja</string>
+    <string name="phoneNumber">646-512-1829</string>
+    <string name="email">avnia@sas.upenn.edu</string>
+    <string name="height">62 in.</string>
+    <string name="weight">2 lbs.</string>
+    <string name="eyeColor">Black Eyes</string>
+    <string name="hairColor">Black Hair</string>
+    <string name="dob">3/2/2000</string>
+    <string name="pastTrips">No Past Trips</string>
+    <string name="fullName">Avni Ahuja</string>
+
+</resources>
