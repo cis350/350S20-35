@@ -301,6 +301,26 @@ var callBoxArray = [];
 
 });
 
+//renders police officers schedules page
+app.get('/policeSchedules', (req, res, next) => {
+
+var policeArray = [];
+  MongoClient.connect(url, function(err, db){
+    policeSchedules = database.db("Hours");
+    assert.equal(null, err);
+    var pointer = policeSchedules.collection('police officers').find();
+    pointer.forEach(function(doc, err){
+      assert.equal(null, err);
+      policeArray.push(doc);
+    }, function(){
+      db.close();
+      console.log(policeArray);
+      res.render('policeOfficerSchedules.ejs', {req: req, schedules: policeArray});
+    });
+  });
+
+});
+
 //renders walking history page
 app.use('/loadhistory', (req, res) => {
   res.render('history.ejs', {req: req, message: null});

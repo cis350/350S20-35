@@ -86,7 +86,9 @@
 						<div class="getLocations">
 					 <% callBoxes.forEach((callBox) => { %>
 						 <a href="/callBox/<%= callBox._id %>" class="item">
-							 <h4 class="Call Box Number: " type ="text">Call Box Number: <%= callBox.Number %></h4>
+							 <h4 class="Call Box Number: " type ="text"><font size="+2">Call Box Number: <%= callBox.Number %></font></h4>
+
+
 							 <h4 class="location: " type ="text">Location: <%= callBox.Location %></h4> </br>
 
 						 </a>
