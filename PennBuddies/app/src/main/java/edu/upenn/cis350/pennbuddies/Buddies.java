@@ -121,6 +121,10 @@ public class Buddies extends AppCompatActivity {
         startActivity(new Intent(Buddies.this, OnDutyPoliceActivity.class));
     }
 
+    public void sendMapsNotification(View v){
+        startActivity(new Intent(Buddies.this, MapsActivity.class));
+    }
+
     public void testNotifications(View v) {
 
 //        NotificationCompat.Builder notificationBuilder =

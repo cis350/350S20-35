@@ -24,4 +24,5 @@
         <item>Afternoon</item>
         <item>Evening</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 </resources>
