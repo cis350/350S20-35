@@ -281,6 +281,26 @@ app.get('/campusresourceshours', (req, res, next) => {
 
 });
 
+//renders call box locations page
+app.get('/callBoxLocations', (req, res, next) => {
+
+var callBoxArray = [];
+  MongoClient.connect(url, function(err, db){
+    theCallBoxes = database.db("Locations");
+    assert.equal(null, err);
+    var pointer = theCallBoxes.collection('Call Boxes').find();
+    pointer.forEach(function(doc, err){
+      assert.equal(null, err);
+      callBoxArray.push(doc);
+    }, function(){
+      db.close();
+      console.log(callBoxArray);
+      res.render('callBoxLocations.ejs', {req: req, callBoxes: callBoxArray});
+    });
+  });
+
+});
+
 //renders walking history page
 app.use('/loadhistory', (req, res) => {
   res.render('history.ejs', {req: req, message: null});
