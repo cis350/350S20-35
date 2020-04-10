@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<title>PennBuddies Homepage</title>
+		<title>PennBuddies</title>
 		<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -32,7 +32,7 @@
 	      background-color: #003366;
 	      color: white;
 	      padding: 15px;
-				position: absolute;
+        position: absolute;
   			bottom: 0;
   			width: 100%;
 	    }
@@ -46,25 +46,27 @@
 	      .row.content {height:auto;}
 	    }
 	  </style>
-		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-		<script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
       $(document).ready(function() {
-        updateFriends();
+        updateProfile();
       })
 
-      function updateFriends() {
-        $.get("/getfriends", function(data) {
-          var friends = data.profile.friends;
+      function updateProfile() {
+        console.log("/getsearchprofile/?username=" + "<%=user%>");
+        $.get("/getsearchprofile/?username=" + "<%=user%>", function(data) {
+          var profile = data.profile;
 
-          var string = '<div class="friends-list"><ul class="list-group">';
+          var string = '<div class="profile-list"><ul class="list-group">';
 
-					for (var i = 0; i < friends.length; i++) {
-						string += '<li class="list-group-item">' + friends[i] + '</li>';
-					}
+          string += '<li class="list-group-item"><label for="username">Username</label><p>' + profile.username + '</p></li>';
+
+          string += '<li class="list-group-item"><label for="name">Full Name</label><p>' + profile.name + '</p></li>';
+
+          string += '<li class="list-group-item"><label for="email">Email</label><p>' + profile.email + '</p></li>';
 
           string = string + "</ul></div>";
-          $("#friends-block").html(string);
-					window.setTimeout(updateFriends, 10000);
+          $("#profile-block").html(string);
         });
       }
     </script>
@@ -103,7 +105,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 			    <div class="col-sm-8 text-left">
-			      <h1>Home</h1>
+			      <h1><%=req.body.username%></h1>
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
@@ -113,31 +115,10 @@
 							<% } %>
 						</div>
 
-						<div class="searchuser">
-							<form method="post" action="/searchuser">
-								<div class="form-group">
-									<h4>Search User:</h4>
-  								<input type="text" name="username" size="20" placeholder="Username" class="form-control" id="add">
-									<button type="submit" class="btn btn-primary">Search</button>
-								</div>
-							</form>
-						</div>
-
-						<div id="friends-display">
+						<div id="profile-display">
 							<br>
-							<h4>Friends:</h4>
-							<div id="friends-block" onload="updateFriends()">
+							<div id="profile-block" onload="updateProfile()">
 							</div>
-						</div>
-
-						<div class="addfriend">
-							<form method="post" action="/addfriend">
-								<div class="form-group">
-									<h4>Add Friend:</h4>
-  								<input type="text" name="friend" size="20" placeholder="Search Friend" class="form-control" id="add">
-									<button type="submit" class="btn btn-primary">Add Friend</button>
-								</div>
-							</form>
 						</div>
 
 					</div>

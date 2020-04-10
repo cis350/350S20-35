@@ -165,7 +165,7 @@ app.post('/checkeditprofile', (req, res) => {
   });
 });
 
-//renders edit profile page
+//searches for a friend and adds the friend
 app.post('/addfriend', (req, res) => {
   var people = database.db("people");
 
@@ -188,8 +188,7 @@ app.post('/addfriend', (req, res) => {
         if (err) throw err;
       });
     } else {
-      console.log(username + " username taken");
-      res.redirect("/signup?message=User already exists or not all fields inputted.");
+      res.redirect("/?message=Couldn't find user.");
     }
   });
 
@@ -206,8 +205,7 @@ app.post('/addfriend', (req, res) => {
         if (err) throw err;
       });
     } else {
-      console.log(username + " username taken");
-      res.redirect("/signup?message=User already exists or not all fields inputted.");
+      res.redirect("/?message=Couldn't find user.");
     }
   });
 
@@ -321,16 +319,42 @@ var policeArray = [];
 
 });
 
-//renders walking history page
-app.use('/loadhistory', (req, res) => {
-  res.render('history.ejs', {req: req, message: null});
-});
-
 //renders resources page
 app.use('/loadresources', (req, res) => {
   res.render('resources.ejs', {req: req, message: null});
 });
 
+//searches for a user
+app.use('/searchuser', (req, res) => {
+  var people = database.db("people");
+
+  var user = req.session.currUser;
+  var searchUser = req.body.username;
+
+  res.render('loadsearchprofile.ejs', {req: req, message: null, user: searchUser});
+});
+
+//gets other user's profile data
+app.get('/getsearchprofile', (req, res) => {
+  var people = database.db("people");
+
+  var user = req.query.username;
+
+  people.collection("user").find({ username: user }).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.json({ profile: result[0] });
+    } else {
+      res.redirect("/?message=Could not load profile");
+    }
+  });
+});
+
+//renders walking history page
+app.use('/loadhistory', (req, res) => {
+  res.render('history.ejs', {req: req, message: null});
+});
 
 //logs out
 app.get('/logout', (req, res) => {
