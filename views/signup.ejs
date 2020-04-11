@@ -74,8 +74,8 @@
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
-									<div>
-										<%= req.query.message %>
+									<div class="alert alert-danger">
+										<strong>Danger!</strong> <%= req.query.message %>
 									</div>
 							<% } %>
 						</div>

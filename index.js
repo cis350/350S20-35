@@ -175,41 +175,64 @@ app.post('/addfriend', (req, res) => {
   var query1 = {username : user};
   var query2 = {username : friend};
 
-  people.collection("friends").find(query1).toArray(function(err, result) {
-    if (err) {
-      throw err;
-    } else if (result != "") {
-      var friends = result[0].friends;
-      friends.push(friend);
+  var alreadyFriends = false;
 
-      var friendsList = { $set: {friends : friends} };
+  console.log("user: " + user);
+  console.log("friend: " + friend);
+  console.log("req.query: " + JSON.stringify(req.query));
 
-      people.collection("friends").updateOne(query1, friendsList, function(err, result2) {
-        if (err) throw err;
-      });
-    } else {
-      res.redirect("/?message=Couldn't find user.");
-    }
-  });
+  if (friend != undefined) {
+    people.collection("friends").find(query1).toArray(function(err, result) {
+      if (err) {
+        throw err;
+      } else if (result != "") {
+        var friends = result[0].friends;
 
-  people.collection("friends").find(query2).toArray(function(err, result) {
-    if (err) {
-      throw err;
-    } else if (result != "") {
-      var friends = result[0].friends;
-      friends.push(user);
+        for (var i = 0; i < friends.length; i++) {
+          if (friends[i] == friend) {
+            alreadyFriends = true;
+          }
+        }
 
-      var friendsList = { $set: {friends : friends} };
+        if (!alreadyFriends) {
+          friends.push(friend);
 
-      people.collection("friends").updateOne(query2, friendsList, function(err, result2) {
-        if (err) throw err;
-      });
-    } else {
-      res.redirect("/?message=Couldn't find user.");
-    }
-  });
+          var friendsList = { $set: {friends : friends} };
 
-  res.redirect("/");
+          people.collection("friends").updateOne(query1, friendsList, function(err, result2) {
+            if (err) {
+              throw err;
+            } else {
+              people.collection("friends").find(query2).toArray(function(err, result3) {
+                if (err) {
+                  throw err;
+                } else if (result3 != "") {
+                  var friends = result3[0].friends;
+                  friends.push(user);
+
+                  var friendsList = { $set: {friends : friends} };
+
+                  people.collection("friends").updateOne(query2, friendsList, function(err, result4) {
+                    if (err) {
+                      throw err;
+                    } else {
+                      res.redirect("/");
+                    }
+                  });
+                } else {
+                  res.redirect("/?message=Couldn't find user.");
+                }
+              });
+            }
+          });
+        } else {
+          res.redirect("/?message=Already friends.");
+        }
+      } else {
+        res.redirect("/?message=Couldn't find user.");
+      }
+    });
+  }
 });
 
 //gets list of friends
@@ -328,23 +351,42 @@ app.use('/loadresources', (req, res) => {
 app.use('/searchuser', (req, res) => {
   var people = database.db("people");
 
-  var user = req.session.currUser;
+  var currUser = req.session.currUser;
   var searchUser = req.body.username;
 
-  res.render('loadsearchprofile.ejs', {req: req, message: null, user: searchUser});
+  var alreadyFriends = false;
+
+  people.collection("friends").find({ username: searchUser }).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+
+      for (var i = 0; i < friends.length; i++) {
+        if (friends[i] == currUser) {
+          alreadyFriends = true;
+        }
+      }
+
+      res.render('loadsearchprofile.ejs', {req: req, message: null, user: searchUser, friends: alreadyFriends});
+    } else {
+      res.redirect("/?message=Couldn't find user.");
+    }
+  });
 });
 
 //gets other user's profile data
 app.get('/getsearchprofile', (req, res) => {
   var people = database.db("people");
 
-  var user = req.query.username;
+  var searchUser = req.query.username;
+  var alreadyFriends = req.query.friends;
 
-  people.collection("user").find({ username: user }).toArray(function(err, result) {
+  people.collection("user").find({ username: searchUser }).toArray(function(err, result) {
     if (err) {
       throw err;
     } else if (result != "") {
-      res.json({ profile: result[0] });
+      res.json({ profile: result[0], friends: alreadyFriends });
     } else {
       res.redirect("/?message=Could not load profile");
     }

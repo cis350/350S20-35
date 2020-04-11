@@ -53,9 +53,9 @@
       })
 
       function updateProfile() {
-        console.log("/getsearchprofile/?username=" + "<%=user%>");
-        $.get("/getsearchprofile/?username=" + "<%=user%>", function(data) {
+        $.get("/getsearchprofile/?username=" + "<%=user%>" + "&friends=" + "<%=friends%>", function(data) {
           var profile = data.profile;
+					var alreadyFriends = data.friends;
 
           var string = '<div class="profile-list"><ul class="list-group">';
 
@@ -63,7 +63,15 @@
 
           string += '<li class="list-group-item"><label for="name">Full Name</label><p>' + profile.name + '</p></li>';
 
-          string += '<li class="list-group-item"><label for="email">Email</label><p>' + profile.email + '</p></li>';
+					console.log("alreadyFriends: " + alreadyFriends);
+
+					if (alreadyFriends == "true") {
+						string += '<li class="list-group-item"><label for="phone">Phone Number</label><p>' + profile.phone + '</p></li>';
+
+	          string += '<li class="list-group-item"><label for="email">Email</label><p>' + profile.email + '</p></li>';
+
+	          string += '<li class="list-group-item"><label for="birthdate">Birthdate</label><p>' + profile.birthdate + '</p></li>';
+					}
 
           string = string + "</ul></div>";
           $("#profile-block").html(string);
@@ -109,11 +117,24 @@
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
-									<div>
-										<%= req.query.message %>
+									<div class="alert alert-danger">
+										<strong>Warning!</strong> <%= req.query.message %>
 									</div>
 							<% } %>
 						</div>
+
+						<%if (friends == true) { %>
+							<p class="bg-info">Friends</p>
+						<% } else { %>
+							<div class="addsearchfriend">
+								<form method="post" action="/addfriend">
+									<div class="form-group">
+										<input name="friend" type="hidden" value=<%=user%>>
+										<button type="submit" class="btn btn-primary">Add Friend</button>
+									</div>
+								</form>
+							</div>
+						<% } %>
 
 						<div id="profile-display">
 							<br>
