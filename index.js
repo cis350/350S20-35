@@ -46,16 +46,17 @@ app.post('/checksignup', (req, res) => {
   var phone = req.body.phone;
   var email = req.body.email;
 
-  console.log("req.body: " + req.body);
-  console.log("JSON.stringify(req.body): " + JSON.stringify(req.body));
-  console.log("{username : username, friends : []}: " + ({username : username, friends : []}));
   var friendsentry = {username : username, friends : []};
+  var historyentry = {username : username, walks : []};
 
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
       throw err;
     } else if (result == "" && id != "" && username != "" && password != "" && name != "" && phone != "" && email != "") {
       people.collection("friends").insertOne(friendsentry, function(err, result2) {
+        if (err) throw err;
+      });
+      people.collection("history").insertOne(historyentry, function(err, result2) {
         if (err) throw err;
       });
       people.collection("user").insertOne(req.body, function(err, result2) {
@@ -396,6 +397,24 @@ app.get('/getsearchprofile', (req, res) => {
 //renders walking history page
 app.use('/loadhistory', (req, res) => {
   res.render('history.ejs', {req: req, message: null});
+});
+
+//gets history data
+app.get('/gethistory', (req, res) => {
+  var people = database.db("people");
+
+  var user = req.session.currUser;
+  var query = { username: user};
+
+  people.collection("history").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.json({ history: result[0] });
+    } else {
+      res.redirect("/editprofile?message=Could not load history");
+    }
+  });
 });
 
 //logs out
