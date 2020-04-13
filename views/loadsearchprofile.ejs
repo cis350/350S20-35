@@ -124,10 +124,21 @@
 						</div>
 
 						<%if (friends == true) { %>
-							<p class="bg-info">Friends</p>
+							<span class="label label-info">Friends</span>
+						<% } else if (sent == true) { %>
+							<span class="label label-info">Friend Request Sent</span>
+						<% } else if (received == true) { %>
+							<div class="acceptfriend">
+								<form method="post" action="/acceptfriendrequest">
+									<div class="form-group">
+										<input name="friend" type="hidden" value=<%=user%>>
+										<button type="submit" class="btn btn-primary">Accept Friend Request</button>
+									</div>
+								</form>
+							</div>
 						<% } else { %>
 							<div class="addsearchfriend">
-								<form method="post" action="/addfriend">
+								<form method="post" action="/sendfriendrequest">
 									<div class="form-group">
 										<input name="friend" type="hidden" value=<%=user%>>
 										<button type="submit" class="btn btn-primary">Add Friend</button>
