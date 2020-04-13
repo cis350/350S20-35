@@ -305,6 +305,31 @@ app.use('/getfriends', (req, res) => {
   });
 });
 
+//gets list of friends
+app.use('/getrequests', (req, res) => {
+  var people = database.db("people");
+
+  var user = req.session.currUser;
+  var query = { username: user};
+
+  people.collection("friends").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      people.collection("friend requests").find(query).toArray(function(err, result2) {
+        if (err) {
+          throw err;
+        } else if (result2 != "") {
+          res.json({ sent: result2[0].sent, received: result2[0].received, friends: result[0].friends });
+        } else {
+          res.redirect("/?message=Could not get requests");
+        }
+      });
+    } else {
+      res.redirect("/?message=Could not get friends");
+    }
+  });
+});
 
 //renders building hours page
 app.get('/buildinghours', (req, res, next) => {

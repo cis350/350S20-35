@@ -32,7 +32,7 @@
 	      background-color: #003366;
 	      color: white;
 	      padding: 15px;
-				position: absolute;
+				position: fixed;
   			bottom: 0;
   			width: 100%;
 	    }
@@ -50,6 +50,8 @@
 		<script>
       $(document).ready(function() {
         updateFriends();
+				updateIncomingRequests();
+				updateOutgoingRequests();
       })
 
       function updateFriends() {
@@ -62,9 +64,75 @@
 						string += '<li class="list-group-item">' + friends[i] + '</li>';
 					}
 
+					if (friends.length == 0) {
+						string += '<li class="list-group-item">No Friends</li>';
+					}
+
           string = string + "</ul></div>";
           $("#friends-block").html(string);
 					window.setTimeout(updateFriends, 10000);
+        });
+      }
+
+			function updateIncomingRequests() {
+        $.get("/getrequests", function(data) {
+          var received = data.received;
+					var friends = data.friends;
+
+					var count = 0;
+          var string = '<div class="incoming-requests-list"><ul class="list-group">';
+
+					for (var i = 0; i < received.length; i++) {
+						var alreadyFriends = false;
+						for (var j = 0; j < friends.length; j++) {
+							if (friends[j] == received[i]) {
+								alreadyFriends = true;
+							}
+						}
+						if (!alreadyFriends) {
+							string += '<li class="list-group-item">' + received[i] + '</li>';
+							count++;
+						}
+					}
+
+					if (count == 0) {
+						string += '<li class="list-group-item">No Incoming Requests</li>';
+					}
+
+          string = string + "</ul></div>";
+          $("#incoming-requests-block").html(string);
+					window.setTimeout(updateIncomingRequests, 10000);
+        });
+      }
+
+			function updateOutgoingRequests() {
+        $.get("/getrequests", function(data) {
+          var sent = data.sent;
+					var friends = data.friends;
+
+					var count = 0;
+          var string = '<div class="outgoing-requests-list"><ul class="list-group">';
+
+					for (var i = 0; i < sent.length; i++) {
+						var alreadyFriends = false;
+						for (var j = 0; j < friends.length; j++) {
+							if (friends[j] == sent[i]) {
+								alreadyFriends = true;
+							}
+						}
+						if (!alreadyFriends) {
+							string += '<li class="list-group-item">' + sent[i] + '</li>';
+							count++;
+						}
+					}
+
+					if (count == 0) {
+						string += '<li class="list-group-item">No Incoming Requests</li>';
+					}
+
+          string = string + "</ul></div>";
+          $("#outgoing-requests-block").html(string);
+					window.setTimeout(updateOutgoingRequests, 10000);
         });
       }
     </script>
@@ -127,6 +195,20 @@
 							<br>
 							<h4>Friends:</h4>
 							<div id="friends-block" onload="updateFriends()">
+							</div>
+						</div>
+
+						<div id="incoming-requests-display">
+							<br>
+							<h4>Incoming Friend Requests:</h4>
+							<div id="incoming-requests-block" onload="updateIncomingRequests()">
+							</div>
+						</div>
+
+						<div id="outgoing-requests-display">
+							<br>
+							<h4>Outgoing Friend Requests:</h4>
+							<div id="outgoing-requests-block" onload="updateOutgoingRequests()">
 							</div>
 						</div>
 
