@@ -88,6 +88,9 @@
           string += '<li class="list-group-item"><label for="eyes">Eye Color:</label>';
           string += '<input type="text" class="form-control" name="eyes" size="20" placeholder="' + profile.eyes + '"></li>';
 
+					string += '<li class="list-group-item"><label for="gender">Gender:</label>';
+          string += '<input type="text" class="form-control" name="gender" size="20" placeholder="' + profile.gender + '"></li>';
+
           string = string + "</ul></div>";
           $("#profile-block").html(string);
         });

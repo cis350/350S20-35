@@ -56,30 +56,20 @@
           var profile = data.profile;
 
           var string = '<div class="profile-list"><ul class="list-group">';
-
-          string += '<li class="list-group-item"><label for="id">Student ID</label><p>' + profile._id + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="username">Username</label><p>' + profile.username + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="password">Password</label><p>*</p></li>';
-
-          string += '<li class="list-group-item"><label for="name">Full Name</label><p>' + profile.name + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="phone">Phone Number</label><p>' + profile.phone + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="email">Email</label><p>' + profile.email + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="birthdate">Birthdate</label><p>' + profile.birthdate + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="height">Height</label><p>' + profile.height + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="weight">Weight</label><p>' + profile.weight + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="hair">Hair Color</label><p>' + profile.hair + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="eyes">Eye Color</label><p>' + profile.eyes + '</p></li>';
-
+          string += '<li class="list-group-item"><b>Student ID: </b>' + profile._id + '</li>';
+          string += '<li class="list-group-item"><b>Username: </b>' + profile.username + '</li>';
+          string += '<li class="list-group-item"><b>Password: </b>*</li>';
+          string += '<li class="list-group-item"><b>Full Name: </b>' + profile.name + '</li>';
+          string += '<li class="list-group-item"><b>Phone Number: </b>' + profile.phone + '</li>';
+          string += '<li class="list-group-item"><b>Email: </b>' + profile.email + '</li>';
+          string += '<li class="list-group-item"><b>Birthdate: </b>' + profile.birthdate + '</li>';
+          string += '<li class="list-group-item"><b>Height: </b>' + profile.height + '</li>';
+          string += '<li class="list-group-item"><b>Weight: </b>' + profile.weight + '</li>';
+          string += '<li class="list-group-item"><b>Hair Color: </b>' + profile.hair + '</li>';
+          string += '<li class="list-group-item"><b>Eye Color: </b>' + profile.eyes + '</li>';
+					string += '<li class="list-group-item"><b>Gender: </b>' + profile.gender + '</li>';
           string = string + "</ul></div>";
+
           $("#profile-block").html(string);
         });
       }

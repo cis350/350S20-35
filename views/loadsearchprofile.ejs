@@ -58,19 +58,17 @@
 					var alreadyFriends = data.friends;
 
           var string = '<div class="profile-list"><ul class="list-group">';
+          string += '<li class="list-group-item"><b>Username: </b>' + profile.username + '</li>';
+          string += '<li class="list-group-item"><b>Full Name: </b>' + profile.name + '</li>';
 
-          string += '<li class="list-group-item"><label for="username">Username</label><p>' + profile.username + '</p></li>';
-
-          string += '<li class="list-group-item"><label for="name">Full Name</label><p>' + profile.name + '</p></li>';
-
-					console.log("alreadyFriends: " + alreadyFriends);
+					if (profile.gender != "") {
+						string += '<li class="list-group-item"><b>Gender: </b>' + profile.gender + '</li>';
+					}
 
 					if (alreadyFriends == "true") {
-						string += '<li class="list-group-item"><label for="phone">Phone Number</label><p>' + profile.phone + '</p></li>';
-
-	          string += '<li class="list-group-item"><label for="email">Email</label><p>' + profile.email + '</p></li>';
-
-	          string += '<li class="list-group-item"><label for="birthdate">Birthdate</label><p>' + profile.birthdate + '</p></li>';
+						string += '<li class="list-group-item"><b>Phone Number: </b>' + profile.phone + '</li>';
+						string += '<li class="list-group-item"><b>Email: </b>' + profile.email + '</li>';
+	          string += '<li class="list-group-item"><b>Birthdate: </b>' + profile.birthdate + '</li>';
 					}
 
           string = string + "</ul></div>";
