@@ -11,46 +11,30 @@ import android.widget.TextView;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 
-import com.mongodb.stitch.android.core.StitchAppClient;
-import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.auth.StitchUser;
-import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential;
 
-//MongoDB Service Packages
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-// Utility Packages
-import com.mongodb.stitch.core.internal.common.BsonUtils;
-
-// Stitch Sync Packages
-import com.mongodb.stitch.core.services.mongodb.remote.sync.ChangeEventListener;
-import com.mongodb.stitch.core.services.mongodb.remote.sync.DefaultSyncConflictResolvers;
-import com.mongodb.stitch.core.services.mongodb.remote.sync.ErrorListener;
-
-// MongoDB Mobile Local Database Packages
-import com.mongodb.stitch.android.services.mongodb.local.LocalMongoDbService;
-
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import androidx.annotation.NonNull;
-import com.google.android.gms.tasks.Task;
 import android.util.Log;
 import android.text.TextUtils;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-//notifications
-import android.os.Build;
-import android.app.NotificationManager;
-import android.app.NotificationChannel;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private String host;
+    private int port;
 
     private EditText email;
     private EditText password;
@@ -60,13 +44,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        StitchAppClient client = Stitch.getAppClient("pennbuddies-yoero");
-        currentUser = client.getAuth().getUser();
-        if(currentUser != null){
-            Log.e("active user?", "already logged in");
-            startActivity(new Intent(MainActivity.this, Buddies.class));
-            finish();
-        }
+
+        host = "localhost";
+        port = 4000;
+
     }
 
     @Override
@@ -103,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
-
-
-
 
     }
 
@@ -152,42 +130,72 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String...params) {
             try {
-                UserPasswordCredential credential = new UserPasswordCredential(params[0], params[1]);
-                final StitchAppClient client = Stitch.getAppClient(getString(R.string.stitch_client_app_id));
-                client.getAuth().loginWithCredential(credential).addOnCompleteListener
-                        (new OnCompleteListener<StitchUser>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<StitchUser> task){
-                    if (task.isSuccessful()) {
+                Log.e("Connection", "Connecting to HTTPS");
+                URL url = new URL("http://10.0.2.2:4000/queryPassword?id=" + params[0]);
+                Log.e("Connection", "Connected");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+                InputStream inputStream;
+                int responsecode = conn.getResponseCode();
+                if (responsecode != 200) {
+                    throw new IllegalStateException();
+                } else {
+                    inputStream = conn.getInputStream();
+
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(
+                                    inputStream));
+
+                    StringBuilder response = new StringBuilder();
+                    String currentLine;
+
+                    while ((currentLine = in.readLine()) != null)
+                        response.append(currentLine);
+                        String resultPassword = response.toString();
+
+                    // parsing file "JSONExample.json"
+                    JSONObject obj = new JSONObject(resultPassword);
+
+                    // typecasting obj to JSONObject
+                    JSONObject passwordObject = (JSONObject) obj;
+
+                    // getting firstName and lastName
+                    String passwordString = (String) passwordObject.get("password");
+
+                    Log.e("Connection", passwordString);
+
+                    in.close();
+
+                    if (passwordString.equals(params[1])) {
                         statusCode = 1;
                         onPostExecute();
-                    } else {
+                    }
+                    else {
                         statusCode = 0;
                         onPostExecute();
                     }
                 }
-                });
             } catch (Exception e) {
-                Log.e("stitch-auth", "Authentication failed");
+                Log.e("Connection", e.toString());
             }
+
             return null;
         }
 
         protected void onPostExecute() {
+            View focus = null;
             if (statusCode == 1) {
-                Log.d("stitch-auth", "Login Successful!");
-                Toast.makeText(MainActivity.this, "Welcome to PennBuddies!",
-                        Toast.LENGTH_SHORT).show();
+                Log.d("Login", "Successful!");
                 startActivity(new Intent(MainActivity.this, Buddies.class));
                 progress.dismiss();
-                finish();
             } else {
-                Log.e("stitch-auth", "Login failed");
-                progress.dismiss();
-                Toast.makeText(MainActivity.this, "Email/Password combination does " +
-                                "not exist in our records",
-                        Toast.LENGTH_SHORT).show();
                 password.setText("");
+                password.setHint("Wrong Email/Password");
+                Log.e("Login", "Failed");
+                focus = email;
+                progress.dismiss();
             }
 
         }
