@@ -27,6 +27,33 @@
 				color: white;
 			}
 
+			#imageUpload
+{
+    display: none;
+}
+
+#profileImage
+{
+    cursor: pointer;
+}
+
+#profile-container {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+#profile-container img {
+    width: 150px;
+    height: 150px;
+}
+
+
 	    /* Set black background color, white text and some padding */
 	    footer {
 	      background-color: #003366;
@@ -46,11 +73,41 @@
 	      .row.content {height:auto;}
 	    }
 	  </style>
+//upload profile pic
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<image id="profileImage" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" width="200" height="200"/>
+<input id="imageUpload" type="file"
+		 name="profile_photo" placeholder="Photo" required="" capture>
+
+		 <script>
+		 $("#profileImage").click(function(e) {
+    $("#imageUpload").click();
+});
+
+function fasterPreview( uploader ) {
+    if ( uploader.files && uploader.files[0] ){
+          $('#profileImage').attr('src',
+             window.URL.createObjectURL(uploader.files[0]) );
+    }
+}
+
+$("#imageUpload").change(function(){
+    fasterPreview( this );
+});
+		 </script>
+
+
+
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
       $(document).ready(function() {
         updateProfile();
       })
+
+
 
       function updateProfile() {
         $.get("/getprofile", function(data) {
@@ -139,7 +196,7 @@
 		</div>
 
 		<footer class="container-fluid text-center">
-		  <p>Alexandra Tanner, Avni Ahuji, Divya Somayajula, Harshini Thinakaran</p>
+		  <p>Alexandra Tanner, Avni Ahuja, Divya Somayajula, Harshini Thinakaran</p>
 		</footer>
 	</body>
 </html>
