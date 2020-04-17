@@ -33,6 +33,8 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static User currUser;
+
     private String host;
     private int port;
 
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(String...params) {
             try {
                 Log.e("Connection", "Connecting to HTTPS");
-                URL url = new URL("http://10.0.2.2:4000/queryPassword?id=" + params[0]);
+                URL url = new URL("http://10.0.2.2:4000/currentUser?id=" + params[0]);
                 Log.e("Connection", "Connected");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -159,16 +161,26 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject(resultPassword);
 
                     // typecasting obj to JSONObject
-                    JSONObject passwordObject = (JSONObject) obj;
+                    JSONObject userObject = (JSONObject) obj;
 
                     // getting firstName and lastName
-                    String passwordString = (String) passwordObject.get("password");
+                    String passwordString = (String) userObject.get("password");
 
                     Log.e("Connection", passwordString);
 
                     in.close();
 
                     if (passwordString.equals(params[1])) {
+                        currUser = new User((String) userObject.get("name"),
+                                (String) userObject.get("username"),
+                                (String) userObject.get("email"),
+                                (String) userObject.get("password"),
+                                (String) userObject.get("hair"),
+                                (String) userObject.get("eyes"),
+                                (String) userObject.get("height"),
+                                (String) userObject.get("weight"),
+                                (String) userObject.get("dob"),
+                                (String) userObject.get("phone"));
                         statusCode = 1;
                         onPostExecute();
                     }
@@ -188,7 +200,11 @@ public class MainActivity extends AppCompatActivity {
             View focus = null;
             if (statusCode == 1) {
                 Log.d("Login", "Successful!");
-                startActivity(new Intent(MainActivity.this, Buddies.class));
+                Intent intent = new Intent(MainActivity.this, Buddies.class);
+                intent.putExtra("email", currUser.getEmail());
+                startActivity(intent);
+
+//                startActivity(new Intent(MainActivity.this, Buddies.class));
                 progress.dismiss();
             } else {
                 password.setText("");
