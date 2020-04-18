@@ -27,6 +27,11 @@
 				color: white;
 			}
 
+			.form-group.required .control-label:before {
+  			content:"*";
+  			color:red;
+			}
+
 	    /* Set black background color, white text and some padding */
 	    footer {
 	      background-color: #003366;
@@ -82,22 +87,106 @@
 						</div>
 
 						<div class="checksignup">
-							<form method="post" action="/checksignup">
-								<input type="text" class="form-control" name="_id" size="20" placeholder="Student ID"><br>
-								<input type="text" class="form-control" name="username" size="20" placeholder="Username"><br>
-								<input type="text" class="form-control" name="password" size="20" placeholder="Password"><br>
-			          <input type="text" class="form-control" name="name" size="20" placeholder="Full Name"><br>
-			          <input type="text" class="form-control" name="phone" size="20" placeholder="Phone Number"><br>
-			          <input type="text" class="form-control" name="email" size="20" placeholder="Email"><br>
-			          <input type="text" class="form-control" name="birthdate" size="20" placeholder="Birthdate"><br>
+							<form class="form-horizontal" method="post" action="/checksignup">
+								<div class="form-group required">
+    							<label class="control-label col-sm-2" for="id"> Student ID:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="id" name="_id" size="20" placeholder="Enter your student ID" required="required">
+    							</div>
+  							</div>
+								<div class="form-group required">
+    							<label class="control-label col-sm-2" for="username"> Username:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="username" name="username" size="20" placeholder="Enter a username" required="required">
+    							</div>
+  							</div>
+								<div class="form-group required">
+    							<label class="control-label col-sm-2" for="password"> Password:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="password" name="password" size="20" placeholder="Enter a password" required="required">
+    							</div>
+  							</div>
+								<div class="form-group required">
+    							<label class="control-label col-sm-2" for="name"> Full Name:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="name" name="name" size="20" placeholder="Enter your full name" required="required">
+    							</div>
+  							</div>
+								<div class="form-group required">
+    							<label class="control-label col-sm-2" for="phone"> Phone Number:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="phone" name="phone" size="20" placeholder="Enter your phone number" required="required">
+    							</div>
+  							</div>
+								<div class="form-group required">
+    							<label class="control-label col-sm-2" for="email"> Email:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="email" name="email" size="20" placeholder="Enter your email address" required="required">
+    							</div>
+  							</div>
+								<div class="form-group">
+    							<label class="control-label col-sm-2" for="birthdate"> Birthdate:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="birthdate" name="birthdate" size="20" placeholder="Enter your birthdate (ex: 01-01-2020)">
+    							</div>
+  							</div>
+								<div class="form-group">
+    							<label class="control-label col-sm-2" for="height"> Height:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="height" name="height" size="20" placeholder="Enter your height (ex: 5\'7)">
+    							</div>
+  							</div>
+								<div class="form-group">
+    							<label class="control-label col-sm-2" for="weight"> Weight:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="weight" name="weight" size="20" placeholder="Enter your weight in pounds">
+    							</div>
+  							</div>
+								<div class="form-group">
+    							<label class="control-label col-sm-2" for="hair"> Hair Color:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="hair" name="hair" size="20" placeholder="Enter your hair color">
+    							</div>
+  							</div>
+								<div class="form-group">
+    							<label class="control-label col-sm-2" for="eyes"> Eye Color:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="eyes" name="eyes" size="20" placeholder="Enter your eye color">
+    							</div>
+  							</div>
+								<div class="form-group">
+    							<label class="control-label col-sm-2" for="gender"> Gender:</label>
+	    						<div class="col-sm-10">
+      							<input type="text" class="form-control" id="gender" name="gender" size="20" placeholder="Enter your gender">
+    							</div>
+  							</div>
+
+								<!-- <label class='control-label'></label>
+								<input type="text" class="form-control" name="_id" size="20" placeholder="Student ID" required="required"><br> -->
+								<!-- <label class='control-label'></label>
+								<input type="text" class="form-control" name="username" size="20" placeholder="Username" required="required"><br> -->
+								<!-- <label class='control-label'></label>
+								<input type="text" class="form-control" name="password" size="20" placeholder="Password" required="required"><br> -->
+			          <!-- <label class='control-label'></label>
+								<input type="text" class="form-control" name="name" size="20" placeholder="Full Name" required="required"><br> -->
+			          <!-- <label class='control-label'></label>
+								<input type="text" class="form-control" name="phone" size="20" placeholder="Phone Number" required="required"><br> -->
+			          <!-- <label class='control-label'></label>
+								<input type="text" class="form-control" name="email" size="20" placeholder="Email" required="required"><br> -->
+			          <!-- <input type="text" class="form-control" name="birthdate" size="20" placeholder="Birthdate"><br>
 			          <input type="text" class="form-control" name="height" size="20" placeholder="Height"><br>
 			          <input type="text" class="form-control" name="weight" size="20" placeholder="Weight"><br>
 			          <input type="text" class="form-control" name="hair" size="20" placeholder="Hair Color"><br>
 			          <input type="text" class="form-control" name="eyes" size="20" placeholder="Eye Color"><br>
-								<input type="text" class="form-control" name="gender" size="20" placeholder="Gender"><br>
+								<input type="text" class="form-control" name="gender" size="20" placeholder="Gender"><br> -->
 								<button type="submit" class="btn btn-primary">Signup</button>
 							</form>
 						</div>
+
+						<br>
+						<br>
+						<br>
+						<br>
 
 			    </div>
 					<div class="col-sm-2"></div>
