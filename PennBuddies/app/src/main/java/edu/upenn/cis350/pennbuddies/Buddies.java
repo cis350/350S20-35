@@ -4,15 +4,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,15 +34,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
-import android.view.View;
 
 //notifications
 
 import androidx.core.app.NotificationCompat;
 import android.app.PendingIntent;
 
-import edu.upenn.cis350.pennbuddies.ui.home.HomeFragment;
-import android.app.Notification;
 
 public class Buddies extends AppCompatActivity {
     LinearLayout profile;
@@ -54,8 +48,10 @@ public class Buddies extends AppCompatActivity {
     ActionBarDrawerToggle drawerToggle;
     Context context = this.getBaseContext();
 
+    public User currUser;
+
     String username;
-    String email;
+    String emailString;
 
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
@@ -78,12 +74,15 @@ public class Buddies extends AppCompatActivity {
             }
         });
 
+        this.currUser = MainActivity.currUser;
+        emailString = currUser.getEmail();
+
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_hours, R.id.nav_onDutyPolice, R.id.nav_tools,
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_onDutyPolice, R.id.nav_tools,
                 R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
@@ -100,17 +99,26 @@ public class Buddies extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerview = navigationView.getHeaderView(0);
-        TextView email = headerview.findViewById(R.id.nav_title);
-        email.setText("GET EMAIL FROM DATABASE");
+        TextView username = headerview.findViewById(R.id.nav_title);
+        TextView email = headerview.findViewById(R.id.nav_subtitle);
+
+        email.setText(emailString);
+        username.setText(currUser.getName());
+
         LinearLayout header = (LinearLayout) headerview.findViewById(R.id.header);
         header.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent picture_intent = new Intent(Buddies.this, Profile.class);
-                startActivity(picture_intent);
+                Intent intent = new Intent(Buddies.this, Profile.class);
+                intent.putExtra("EMAIL", emailString);
+                startActivity(intent);
             }
         });
 
+    }
+
+    public void goRequestBuddy(View v) {
+        startActivity(new Intent(Buddies.this, RequestBuddyActivity.class));
     }
 
     public void buildingHours(View v) {
@@ -207,7 +215,7 @@ public class Buddies extends AppCompatActivity {
 //                Intent intent;
 //                switch (id) {
 //                    case R.id.nav_home:
-//                        intent = new Intent(getApplicationContext(), HomeFragment.class);
+//                        intent = new Intent(getApplicationContext(), Buddies.class);
 //                        startActivity(intent);
 //                        break;
 //                    case R.id.nav_hours:
@@ -222,6 +230,5 @@ public class Buddies extends AppCompatActivity {
 //                return false;
 //            }
 //        });
-//
 //    }
 }

@@ -18,6 +18,8 @@ var database;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   database = db;
+
+
 });
 
 //renders homepage
@@ -333,15 +335,6 @@ app.use('/getrequests', (req, res) => {
 
 //renders building hours page
 app.get('/buildinghours', (req, res, next) => {
-//  buildings = database.db("hours");
-//  var query = { name: building };
-
-  //people = database.db("Hours");
-
-//  var buildingName = req.name;
-//  var hours = req.name.hours;
-//  var location = req.name.location;
-
 var buildingArray = [];
   MongoClient.connect(url, function(err, db){
     theBuildings = database.db("Hours");

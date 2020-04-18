@@ -11,11 +11,12 @@
         android:layout_width="430dp"
         android:layout_height="364dp"
         android:layout_marginTop="121dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="246dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/login_logo" />
 
     <EditText
@@ -88,7 +89,7 @@
         android:layout_marginEnd="75dp"
         android:layout_marginBottom="233dp"
         android:background="#00FFFFFF"
-        android:text="Don't have an account? Register ->"
+        android:text=""
         android:textAllCaps="false"
         android:textColor="#5D75FE"
         app:layout_constraintBottom_toBottomOf="parent"
