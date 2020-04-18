@@ -7,6 +7,7 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
 		<style>
 			.container-fluid {
 				padding-right: 0;
@@ -15,21 +16,94 @@
 				margin-left: 0;
 			}
 
+			input[type=text] {
+				background-color: #ECEEF8;
+				font-family: 'Roboto', sans-serif;
+				font-style: normal;
+				font-weight: bold;
+				font-size: 12px;
+				line-height: 21px;
+  			color: #5D75FE;
+			}
+
+			input[type=text]::placeholder {
+  			color: #5D75FE;
+			}
+
+			input[type=password] {
+				background-color: #ECEEF8;
+				font-family: 'Roboto', sans-serif;
+				font-style: normal;
+				font-size: 12px;
+				line-height: 21px;
+  			color: #5D75FE;
+			}
+
+			input[type=password]::placeholder {
+  			color: #5D75FE;
+			}
+
+			.input-group-addon {
+				background-color: #ECEEF8;
+				color: #5D75FE;
+			}
+
+			.submitButton {
+  			background-color: #5D75FE;
+				border: none;
+  			color: white;
+				display: inline-block;
+				border-radius: 12px;
+				text-decoration: none;
+				padding: 3px 25px;
+				font-family: Roboto;
+				font-style: normal;
+				font-size: 12px;
+				text-align: center;
+			}
+
+			.signupButton {
+				border: none;
+  			color: #5D75FE;
+				display: inline-block;
+				border-radius: 12px;
+				text-decoration: none;
+				font-family: Roboto;
+				font-style: normal;
+				font-size: 12px;
+				text-align: center;
+			}
+
 			/* Remove the navbar's default margin-bottom and rounded borders */
 	    .navbar {
-				background-color: #003366;
+				background-color: #314BC5;
 				margin-bottom: 0;
 	      border-radius: 0;
 				width: 100%;
 	    }
 
+			/* change the brand and text color */
 			.navbar-custom .navbar-brand, .navbar-custom .navbar-text {
 				color: white;
 			}
 
+			/* change the link color */
+			.navbar-custom .navbar-nav .nav-link {
+    		color: #5D75FE;
+			}
+
+			/* change the color of active or hovered links */
+			.navbar-custom .nav-item.active .nav-link, .navbar-custom .nav-item:hover .nav-link {
+    		color: #ECEEF8;
+			}
+
+			h1 {
+  			color: #5D75FE;
+			}
+
 	    /* Set black background color, white text and some padding */
 	    footer {
-	      background-color: #003366;
+	      background-color: #314BC5;
 	      color: white;
 	      padding: 15px;
 				position: fixed;
