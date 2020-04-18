@@ -51,6 +51,7 @@ app.post('/checksignup', (req, res) => {
   var friendsentry = {username : username, friends : []};
   var historyentry = {username : username, walks : []};
   var requestentry = {username : username, sent : [], received : []};
+  var walkrequestentry = {username : username, sent : [], received : []};
 
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
@@ -63,6 +64,9 @@ app.post('/checksignup', (req, res) => {
         if (err) throw err;
       });
       people.collection("friend requests").insertOne(requestentry, function(err, result2) {
+        if (err) throw err;
+      });
+      people.collection("walk requests").insertOne(walkrequestentry, function(err, result2) {
         if (err) throw err;
       });
       people.collection("user").insertOne(req.body, function(err, result2) {
