@@ -111,31 +111,6 @@
   			width: 100%;
 	    }
 
-			#imageUpload
-{
-    display: none;
-}
-
-#profileImage
-{
-    cursor: pointer;
-}
-
-#profile-container {
-    width: 150px;
-    height: 150px;
-    overflow: hidden;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-    border-radius: 50%;
-}
-
-#profile-container img {
-    width: 150px;
-    height: 150px;
-}
 
 	    /* On small screens, set height to 'auto' for sidenav and grid */
 	    @media screen and (max-width: 767px) {
@@ -147,30 +122,6 @@
 	    }
 	  </style>
 //upload profile pic
-
-
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<image id="profileImage" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" width="200" height="200"/>
-<input id="imageUpload" type="file"
-		 name="profile_photo" placeholder="Photo" required="" capture>
-
-		 <script>
-		 $("#profileImage").click(function(e) {
-    $("#imageUpload").click();
-});
-
-function fasterPreview( uploader ) {
-    if ( uploader.files && uploader.files[0] ){
-          $('#profileImage').attr('src',
-             window.URL.createObjectURL(uploader.files[0]) );
-    }
-}
-
-$("#imageUpload").change(function(){
-    fasterPreview( this );
-});
-		 </script>
-
 
 
 
