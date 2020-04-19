@@ -62,15 +62,15 @@
 				text-align: center;
 			}
 
-			.signupButton {
+			.signupUserButton {
 				border: none;
   			color: #5D75FE;
 				display: inline-block;
-				border-radius: 12px;
+				border-radius: 40px;
 				text-decoration: none;
 				font-family: Roboto;
 				font-style: normal;
-				font-size: 12px;
+				font-size: 40px;
 				text-align: center;
 			}
 
@@ -155,32 +155,18 @@
 							<% } %>
 						</div>
 
-						<div class="checklogin">
-							<form method="post" action="/checklogin">
-								<div class="form-group">
-									<div class="input-group">
-		    						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-    								<input id="username" type="text" class="form-control" name="username" placeholder="Username">
-  								</div>
-  								<div class="input-group">
-    								<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-    								<input id="password" type="password" class="form-control" name="password" placeholder="Password">
-  								</div>
-									<button type="submit" class="submitButton">Login</button>
-								</div>
+						<div class="policeOfficerSignUp">
+							<form method="get" action="/signup">
+								<button type="submit" class="signupUserButton">Police Officer</button>
 							</form>
-						</div>
+					</div>
 
-						<div class="signup">
-							<form method="get" action="/signupUser">
-								<button type="submit" class="signupButton">Don't have an account? Register -></button>
-							</form>
-						</div>
-			    </div>
-					<div class="col-sm-2"></div>
-			  </div>
-			</div>
-		</div>
+					<div class="regSignUp">
+						<form method="get" action="/signup">
+							<button type="submit" class="signupUserButton">Student</button>
+						</form>
+				</div>
+
 
 		<footer class="container-fluid text-center">
 		  <p>Alexandra Tanner, Avni Ahuja, Divya Somayajula, Harshini Thinakaran</p>

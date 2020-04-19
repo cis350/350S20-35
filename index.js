@@ -31,6 +31,11 @@ app.get('/', (req, res) => {
   }
 });
 
+//renders signup User page
+app.get('/signupUser', (req, res) => {
+  res.render('signupUser.ejs', {req: req, message: null});
+});
+
 //renders signup page
 app.get('/signup', (req, res) => {
   res.render('signup.ejs', {req: req, message: null});
