@@ -63,15 +63,20 @@
 			}
 
 			.signupUserButton {
+				background-color: #2465DD;
+				width: 200px;
+				height: 65px;
 				border: none;
-  			color: #5D75FE;
+  			color: white;
 				display: inline-block;
 				border-radius: 40px;
 				text-decoration: none;
-				font-family: Roboto;
-				font-style: normal;
-				font-size: 40px;
+				font-family: Brawler;
+				font-style: 16px;
+				font-size: 25px;
 				text-align: center;
+				margin: 4px 2px;
+				cursor: pointer;
 			}
 
 			/* Remove the navbar's default margin-bottom and rounded borders */
@@ -90,7 +95,7 @@
 			/* change the link color */
 			.navbar-custom .navbar-nav .nav-link {
     		color: #5D75FE;
-			}
+
 
 			/* change the color of active or hovered links */
 			.navbar-custom .nav-item.active .nav-link, .navbar-custom .nav-item:hover .nav-link {
@@ -132,6 +137,8 @@
 			        <span class="icon-bar"></span>
 			      </button>
 			      <a class="navbar-brand" href="/">PennBuddies</a>
+						<br>
+
 			    </div>
 			    <div class="collapse navbar-collapse" id="myNavbar">
 			      <ul class="nav navbar-nav">
@@ -145,7 +152,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 					<div class="col-sm-8 text-left">
-			      <h1>PennBuddies</h1>
+			      <h1>Pick which type of user.</h1>
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
@@ -155,12 +162,12 @@
 							<% } %>
 						</div>
 
+
 						<div class="policeOfficerSignUp">
 							<form method="get" action="/signup">
 								<button type="submit" class="signupUserButton">Police Officer</button>
 							</form>
 					</div>
-
 					<div class="regSignUp">
 						<form method="get" action="/signup">
 							<button type="submit" class="signupUserButton">Student</button>
