@@ -245,6 +245,16 @@ public class ManageFriendsActivity extends AppCompatActivity {
                 });
                 return null;
             }
+
+            if (currUser.getFriends().contains(friendUsername)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        errorText.setText("You're already friends with "+ friendUsername);
+                    }
+                });
+                return null;
+            }
             try {
                 Log.e("Connection", "Connecting to HTTPS");
                 URL url = new URL("http://10.0.2.2:4000/sendFriendRequestMobile?id="
