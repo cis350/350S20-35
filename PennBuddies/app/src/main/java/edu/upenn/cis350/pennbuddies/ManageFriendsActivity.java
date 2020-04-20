@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.view.View.OnClickListener;
+
 public class ManageFriendsActivity extends AppCompatActivity {
 
     private String host;
@@ -64,6 +66,79 @@ public class ManageFriendsActivity extends AppCompatActivity {
             friendUsernameBox.requestFocus();
         } else {
             new addFriend().execute(friendUsernameText);
+        }
+    }
+
+    private class acceptRequest extends AsyncTask<String, Void, Void> {
+
+        LinearLayout linlay;
+        private String result;
+
+        @Override
+        protected Void doInBackground(String...params) {
+            String friendUsername = params[0];
+            try {
+                Log.e("Connection", "Connecting to HTTPS");
+                URL url = new URL("http://10.0.2.2:4000/acceptfriendrequestMobile?id="
+                        + currUser.getUsername() + "&id=" + friendUsername);
+                Log.e("Connection", "Connected");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+                InputStream inputStream;
+                int responsecode = conn.getResponseCode();
+                if (responsecode != 200) {
+                    throw new IllegalStateException();
+                } else {
+                    inputStream = conn.getInputStream();
+
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(
+                                    inputStream));
+
+                    StringBuilder response = new StringBuilder();
+                    String currentLine;
+
+                    while ((currentLine = in.readLine()) != null)
+                        response.append(currentLine);
+                    String resultPassword = response.toString();
+
+                    // parsing file "JSONExample.json"
+                    JSONObject obj = new JSONObject(resultPassword);
+
+                    // typecasting obj to JSONObject
+                    JSONObject userObject = (JSONObject) obj;
+
+                    // getting firstName and lastName
+                    result = (String) userObject.get("status");
+
+                    Log.e("Result", result);
+                    conn.disconnect();
+                    in.close();
+
+                    currUser.friends.add(params[0]);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            errorText.setText(result);
+                        }
+                    });
+
+                }
+            } catch (Exception e) {
+                Log.e("Connection", e.toString());
+                if (e.toString().equals("org.json.JSONException: No value for status")) {
+                    Log.e("no value", "true");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            errorText.setText("Friend request accepted");
+                        }
+                    });
+                }
+            }
+            return null;
         }
     }
 
@@ -114,11 +189,14 @@ public class ManageFriendsActivity extends AppCompatActivity {
                     // getting firstName and lastName
                     incomingRequests = new ArrayList<String>();
                     for(int i = 0; i < arrIncoming.length(); i++){
-                        incomingRequests.add(arrIncoming.getString(i));
+                        if (!currUser.friends.contains(arrIncoming.getString(i))) {
+                            incomingRequests.add(arrIncoming.getString(i));
+                        }
                     }
 
                     Log.e("Recieved requests: ", incomingRequests.toString());
 
+                    conn.disconnect();
                     in.close();
 
                     runOnUiThread(new Runnable() {
@@ -130,6 +208,14 @@ public class ManageFriendsActivity extends AppCompatActivity {
                                 TextView textView = new TextView(ManageFriendsActivity.this);
                                 textView.setText(incomingRequests.get(i));
                                 textView.setTextSize(15);
+                                textView.setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        v.setVisibility(View.GONE);
+                                        currUser.friends.add(textView.getText().toString());
+                                        new acceptRequest().execute(textView.getText().toString());
+                                    }
+                                });
                                 linearLayout.addView(textView);
                             }
                         }
@@ -150,6 +236,25 @@ public class ManageFriendsActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String...params) {
             String friendUsername = params[0];
+            if (currUser.getUsername().equals(friendUsername)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        errorText.setText("Unfortunately, you can't friend yourself");
+                    }
+                });
+                return null;
+            }
+
+            if (currUser.getFriends().contains(friendUsername)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        errorText.setText("You're already friends with "+ friendUsername);
+                    }
+                });
+                return null;
+            }
             try {
                 Log.e("Connection", "Connecting to HTTPS");
                 URL url = new URL("http://10.0.2.2:4000/sendFriendRequestMobile?id="
@@ -187,7 +292,7 @@ public class ManageFriendsActivity extends AppCompatActivity {
                     result = (String) userObject.get("status");
 
                     Log.e("Result", result);
-
+                    conn.disconnect();
                     in.close();
 
                     runOnUiThread(new Runnable() {
@@ -205,7 +310,7 @@ public class ManageFriendsActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            errorText.setText("No such user found");
+                            errorText.setText("Friend request sent");
                         }
                     });
                 }

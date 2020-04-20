@@ -84,9 +84,11 @@ public class RequestBuddyActivity extends AppCompatActivity {
                     JSONObject profile = (JSONObject) userObject.get("profile");
                     JSONArray arr = (JSONArray) profile.get("friends");
 
+
                     // getting firstName and lastName
                     friends = new ArrayList<String>();
                     for(int i = 0; i < arr.length(); i++){
+                        currUser.friends.add(arr.getString(i));
                         friends.add(arr.getString(i));
                     }
 
