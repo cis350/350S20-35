@@ -150,6 +150,10 @@
           string += '<li class="list-group-item"><b>Hair Color: </b>' + profile.hair + '</li>';
           string += '<li class="list-group-item"><b>Eye Color: </b>' + profile.eyes + '</li>';
 					string += '<li class="list-group-item"><b>Gender: </b>' + profile.gender + '</li>';
+					string += '<li class="list-group-item"><b>Gender: </b>' + profile.location + '</li>';
+					string += '<li class="list-group-item"><b>Gender: </b>' + profile.start + '</li>';
+					string += '<li class="list-group-item"><b>Gender: </b>' + profile.end + '</li>';
+
           string = string + "</ul></div>";
 
           $("#profile-block").html(string);
@@ -205,7 +209,7 @@
 							<br>
 							<div id="profile-block" onload="updateProfile()">
 							</div>
-						</div>					
+						</div>
 
 						<div class="editprofile">
 							<form method="get" action="/editprofile">
