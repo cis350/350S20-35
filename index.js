@@ -36,14 +36,26 @@ app.get('/signupUser', (req, res) => {
   res.render('signupUser.ejs', {req: req, message: null});
 });
 
-//renders signup page
+//renders student signup page
 app.get('/signup', (req, res) => {
   res.render('signup.ejs', {req: req, message: null});
+});
+
+//renders police signup page
+app.get('/signupPolice', (req, res) => {
+  res.render('signupPolice.ejs', {req: req, message: null});
+});
+
+//renders escort signup page
+app.get('/signupEscort', (req, res) => {
+  res.render('signupEscort.ejs', {req: req, message: null});
 });
 
 //checks if username is taken, if not signs user up
 app.post('/checksignup', (req, res) => {
   var people = database.db("people");
+  var hours = database.db("Hours");
+
 
   var query = { username: req.body.username };
   var id = req.body._id;
@@ -52,11 +64,18 @@ app.post('/checksignup', (req, res) => {
   var name = req.body.name;
   var phone = req.body.phone;
   var email = req.body.email;
+  var location = req.body.location;
+  var start = req.body.start;
+  var end = req.body.end;
 
   var friendsentry = {username : username, friends : []};
   var historyentry = {username : username, walks : []};
   var requestentry = {username : username, sent : [], received : []};
   var walkrequestentry = {username : username, sent : [], received : []};
+  var policescheduleentry = {Name: name, Start : start, End : end, Location : location};
+  var escortscheduleentry = {Name: name, Start : start, End : end};
+
+
 
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
@@ -74,13 +93,35 @@ app.post('/checksignup', (req, res) => {
       people.collection("walk requests").insertOne(walkrequestentry, function(err, result2) {
         if (err) throw err;
       });
-      people.collection("user").insertOne(req.body, function(err, result2) {
+
+    if (location == ""){
+      hours.collection("escorts").insertOne(escortscheduleentry, function(err, result2) {
         if (err) throw err;
-        console.log(username + " signed up");
+        console.log("I am n escort" + escortscheduleentry);
+        console.log(username + " schedule inputted");
         req.session.loggedIn = true;
-    	  req.session.currUser = username;
+        req.session.currUser = username;
+        res.render('homepage.ejs', {req: req, message: null});
+  });
+
+}
+    else{
+      hours.collection("police officers").insertOne(policescheduleentry, function(err, result2) {
+        if (err) throw err;
+        console.log("I am a police officer" + policescheduleentry);
+        console.log(username + " schedule inputted");
+        req.session.loggedIn = true;
+        req.session.currUser = username;
         res.render('homepage.ejs', {req: req, message: null});
       });
+    }
+    people.collection("user").insertOne(req.body, function(err, result2) {
+      if (err) throw err;
+      console.log(username + " signed up");
+      req.session.loggedIn = true;
+      req.session.currUser = username;
+      res.render('homepage.ejs', {req: req, message: null});
+    });
     } else {
       console.log(username + " username taken");
       res.redirect("/signup?message=User already exists or not all fields inputted.");
