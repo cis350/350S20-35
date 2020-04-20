@@ -7,6 +7,7 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
 		<style>
 			.container-fluid {
 				padding-right: 0;
@@ -14,29 +15,100 @@
 				margin-right: 0;
 				margin-left: 0;
 			}
+			input[type=text] {
+				background-color: #ECEEF8;
+				font-family: 'Roboto', sans-serif;
+				font-style: normal;
+				font-weight: bold;
+				font-size: 12px;
+				line-height: 21px;
+  			color: #5D75FE;
+			}
+
+			input[type=text]::placeholder {
+  			color: #5D75FE;
+			}
+
+			input[type=password] {
+				background-color: #ECEEF8;
+				font-family: 'Roboto', sans-serif;
+				font-style: normal;
+				font-size: 12px;
+				line-height: 21px;
+  			color: #5D75FE;
+			}
+
+			input[type=password]::placeholder {
+  			color: #5D75FE;
+			}
+
+			.input-group-addon {
+				background-color: #ECEEF8;
+				color: #5D75FE;
+			}
+
+			.submitButton {
+  			background-color: #5D75FE;
+				border: none;
+  			color: white;
+				display: inline-block;
+				border-radius: 12px;
+				text-decoration: none;
+				padding: 3px 25px;
+				font-family: Roboto;
+				font-style: normal;
+				font-size: 12px;
+				text-align: center;
+			}
+
+			.signupButton {
+				border: none;
+  			color: #5D75FE;
+				display: inline-block;
+				border-radius: 12px;
+				text-decoration: none;
+				font-family: Roboto;
+				font-style: normal;
+				font-size: 12px;
+				text-align: center;
+			}
 
 			/* Remove the navbar's default margin-bottom and rounded borders */
-			.navbar {
-				background-color: #003366;
+	    .navbar {
+				background-color: #314BC5;
 				margin-bottom: 0;
 	      border-radius: 0;
 				width: 100%;
 	    }
 
+			/* change the brand and text color */
 			.navbar-custom .navbar-brand, .navbar-custom .navbar-text {
 				color: white;
 			}
 
+			/* change the link color */
+			.navbar-custom .navbar-nav .nav-link {
+    		color: #5D75FE;
+			}
+
+			/* change the color of active or hovered links */
+			.navbar-custom .nav-item.active .nav-link, .navbar-custom .nav-item:hover .nav-link {
+    		color: #ECEEF8;
+			}
+
+			h1 {
+  			color: #5D75FE;
+			}
+
 	    /* Set black background color, white text and some padding */
 	    footer {
-	      background-color: #003366;
+	      background-color: #314BC5;
 	      color: white;
 	      padding: 15px;
 				position: fixed;
   			bottom: 0;
   			width: 100%;
 	    }
-
 	    /* On small screens, set height to 'auto' for sidenav and grid */
 	    @media screen and (max-width: 767px) {
 	      .sidenav {
@@ -51,47 +123,32 @@
       $(document).ready(function() {
         updateProfile();
       })
-
       function updateProfile() {
         $.get("/getprofile", function(data) {
           var profile = data.profile;
-
           var string = '<div class="profile-list"><ul class="list-group">';
-
           string += '<li class="list-group-item"><label for="id">Student ID: ' + profile._id + '</label></li>';
-
           string += '<li class="list-group-item"><label for="username">Username: ' + profile.username + '</label></li>';
-
           string += '<li class="list-group-item"><label for="password">Password:</label>';
           string += '<input type="text" class="form-control" name="password" size="20" placeholder="*"></li>';
-
           string += '<li class="list-group-item"><label for="name">Full Name:</label>';
           string += '<input type="text" class="form-control" name="name" size="20" placeholder="' + profile.name + '"></li>';
-
           string += '<li class="list-group-item"><label for="phone">Phone Number:</label>';
           string += '<input type="text" class="form-control" name="phone" size="20" placeholder="' + profile.phone + '"></li>';
-
           string += '<li class="list-group-item"><label for="email">Email:</label>';
           string += '<input type="text" class="form-control" name="email" size="20" placeholder="' + profile.email + '"></li>';
-
           string += '<li class="list-group-item"><label for="birthdate">Birthdate:</label>';
           string += '<input type="text" class="form-control" name="birthdate" size="20" placeholder="' + profile.birthdate + '"></li>';
-
           string += '<li class="list-group-item"><label for="height">Height:</label>';
           string += '<input type="text" class="form-control" name="height" size="20" placeholder="' + profile.height + '"></li>';
-
           string += '<li class="list-group-item"><label for="weight">Weight:</label>';
           string += '<input type="text" class="form-control" name="weight" size="20" placeholder="' + profile.weight + '"></li>';
-
           string += '<li class="list-group-item"><label for="hair">Hair Color:</label>';
           string += '<input type="text" class="form-control" name="hair" size="20" placeholder="' + profile.hair + '"></li>';
-
           string += '<li class="list-group-item"><label for="eyes">Eye Color:</label>';
           string += '<input type="text" class="form-control" name="eyes" size="20" placeholder="' + profile.eyes + '"></li>';
-
 					string += '<li class="list-group-item"><label for="gender">Gender:</label>';
           string += '<input type="text" class="form-control" name="gender" size="20" placeholder="' + profile.gender + '"></li>';
-
           string = string + "</ul></div>";
           $("#profile-block").html(string);
         });
@@ -150,9 +207,14 @@
 			            </div>
 			          </div>
 
-								<button type="submit" class="btn btn-primary">Submit Changes</button>
+								<button type="submit" class="submitButton">Submit Changes</button>
 							</form>
 						</div>
+
+						<br>
+						<br>
+						<br>
+						<br>
 
 					</div>
 					<div class="col-sm-2"></div>
@@ -161,7 +223,7 @@
 		</div>
 
 		<footer class="container-fluid text-center">
-		  <p>Alexandra Tanner, Avni Ahuji, Divya Somayajula, Harshini Thinakaran</p>
+		  <p>Alexandra Tanner, Avni Ahuja, Divya Somayajula, Harshini Thinakaran</p>
 		</footer>
 	</body>
 </html>

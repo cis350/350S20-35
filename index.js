@@ -18,6 +18,8 @@ var database;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   database = db;
+
+
 });
 
 //renders homepage
@@ -27,6 +29,11 @@ app.get('/', (req, res) => {
   } else {
     res.render('main.ejs', {req: req});
   }
+});
+
+//renders signup User page
+app.get('/signupUser', (req, res) => {
+  res.render('signupUser.ejs', {req: req, message: null});
 });
 
 //renders signup page
@@ -49,6 +56,7 @@ app.post('/checksignup', (req, res) => {
   var friendsentry = {username : username, friends : []};
   var historyentry = {username : username, walks : []};
   var requestentry = {username : username, sent : [], received : []};
+  var walkrequestentry = {username : username, sent : [], received : []};
 
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
@@ -61,6 +69,9 @@ app.post('/checksignup', (req, res) => {
         if (err) throw err;
       });
       people.collection("friend requests").insertOne(requestentry, function(err, result2) {
+        if (err) throw err;
+      });
+      people.collection("walk requests").insertOne(walkrequestentry, function(err, result2) {
         if (err) throw err;
       });
       people.collection("user").insertOne(req.body, function(err, result2) {
@@ -333,15 +344,6 @@ app.use('/getrequests', (req, res) => {
 
 //renders building hours page
 app.get('/buildinghours', (req, res, next) => {
-//  buildings = database.db("hours");
-//  var query = { name: building };
-
-  //people = database.db("Hours");
-
-//  var buildingName = req.name;
-//  var hours = req.name.hours;
-//  var location = req.name.location;
-
 var buildingArray = [];
   MongoClient.connect(url, function(err, db){
     theBuildings = database.db("Hours");
