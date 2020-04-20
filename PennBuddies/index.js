@@ -48,7 +48,6 @@ app.use('/queryPassword', (req, res) => {
                   // throw err;
                   res.redirect("/editprofile?message=Could not load profile4");
                 } else if (result != "") {
-                    // res.redirect("/editprofile?password=" + result[0].name);
                   res.json({'password': result[0].password});
                   currentEmail = email;
                 } else {
@@ -67,7 +66,9 @@ app.use('/currentUser', (req, res) => {
     var people = database.db("people");
 
     people.collection("user").find({email : email}).toArray(function(err, result) {
-        // res.json({'password': result[0].password});
+      if (result == "") {
+        res.json({'password': ""})
+      } else {
         res.json(
             {'name' : result[0].name,
             'username': result[0].username, 
@@ -81,6 +82,9 @@ app.use('/currentUser', (req, res) => {
             'weight' : result[0].weight,
             'gender' : result[0].gender,
         });
+      }
+        // res.json({'password': result[0].password});
+        
     });
 });
 
@@ -104,15 +108,19 @@ app.use('/sendfriendrequestMobile', (req, res) => {
   var alreadySent = false;
 
   if (friend != undefined) {
-    people.collection("user").find(query2).toArray(function(err, result) {
-        if (err) {
-            abort = true;
-            data = {"status": "error finding user"};
-            res.json(data);
-        }
-        else {
-            abort = false;
-        }
+    console.log("here");
+    people.collection("user").find(query2).toArray(function(err, result20) {
+      console.log("result:" + result20 + ".");
+      if (err) {
+        console.log("err");
+        throw err;
+      }
+      if (result20 == "") {
+          console.log("blank");
+          abort = true;
+          console.log("abort: "+ abort);
+          data = {"status": "error finding user"};
+      }
     })
 } else {
     abort = true;
@@ -159,7 +167,7 @@ if (abort == false) {
                     if (err) {
                       throw err;
                     } else {
-                      res.redirect("/");
+                      data = ({"status": "sent"});
                     }
                   });
                 } else {
@@ -177,6 +185,65 @@ if (abort == false) {
       res.json(data);
     });
     console.log(data);
+  }
+});
+
+
+//searches for a friend and sends a friend request to them
+app.use('/acceptfriendrequestMobile', (req, res) => {
+  var people = database.db("people");
+
+  var id = req.query.id;
+
+  var data = {}
+
+  var user = id[0];
+  var friend = id[1];
+
+  var query1 = {username : user};
+  var query2 = {username : friend};
+
+  console.log(user + " is accepting " + friend + "'s request");
+
+  if (friend != undefined) {
+    people.collection("friends").find(query1).toArray(function(err, result) {
+      if (err) {
+        throw err;
+      } else if (result != "") {
+        var friends = result[0].friends;
+        friends.push(friend);
+        var friendsList = { $set: {friends : friends} };
+
+        people.collection("friends").updateOne(query1, friendsList, function(err, result2) {
+          if (err) {
+            throw err;
+          } else {
+            people.collection("friends").find(query2).toArray(function(err, result3) {
+              if (err) {
+                throw err;
+              } else if (result3 != "") {
+                var friends = result3[0].friends;
+                friends.push(user);
+                var friendsList = { $set: {friends : friends} };
+
+                people.collection("friends").updateOne(query2, friendsList, function(err, result4) {
+                  if (err) {
+                    throw err;
+                  } else {
+                    data = {"status": "successfully accepted"};
+                  }
+                });
+              } else {
+                data = {"status": "couldn't find user"};
+              }
+            });
+          }
+        });
+      } else {
+        data = {"status": "couldn't find user"};
+      }
+      res.json(data);
+    });
   }
 });
 

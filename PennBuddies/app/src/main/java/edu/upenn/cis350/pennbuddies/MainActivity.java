@@ -157,36 +157,43 @@ public class MainActivity extends AppCompatActivity {
                         response.append(currentLine);
                         String resultPassword = response.toString();
 
-                    // parsing file "JSONExample.json"
-                    JSONObject obj = new JSONObject(resultPassword);
 
-                    // typecasting obj to JSONObject
-                    JSONObject userObject = (JSONObject) obj;
-
-                    // getting firstName and lastName
-                    String passwordString = (String) userObject.get("password");
-
-                    Log.e("Connection", passwordString);
-
-                    in.close();
-
-                    if (passwordString.equals(params[1])) {
-                        currUser = new User((String) userObject.get("name"),
-                                (String) userObject.get("username"),
-                                (String) userObject.get("email"),
-                                (String) userObject.get("password"),
-                                (String) userObject.get("hair"),
-                                (String) userObject.get("eyes"),
-                                (String) userObject.get("height"),
-                                (String) userObject.get("weight"),
-                                (String) userObject.get("dob"),
-                                (String) userObject.get("phone"));
-                        statusCode = 1;
+                    if (resultPassword.equals("Default Message")) {
+                        statusCode = 0;
                         onPostExecute();
                     }
                     else {
-                        statusCode = 0;
-                        onPostExecute();
+                        // parsing file "JSONExample.json"
+                        JSONObject obj = new JSONObject(resultPassword);
+
+                        // typecasting obj to JSONObject
+                        JSONObject userObject = (JSONObject) obj;
+
+                        // getting firstName and lastName
+                        String passwordString = (String) userObject.get("password");
+
+                        Log.e("Connection", passwordString);
+
+                        in.close();
+
+                        if (passwordString.equals(params[1])) {
+                            currUser = new User((String) userObject.get("name"),
+                                    (String) userObject.get("username"),
+                                    (String) userObject.get("email"),
+                                    (String) userObject.get("password"),
+                                    (String) userObject.get("hair"),
+                                    (String) userObject.get("eyes"),
+                                    (String) userObject.get("height"),
+                                    (String) userObject.get("weight"),
+                                    (String) userObject.get("dob"),
+                                    (String) userObject.get("phone"));
+                            statusCode = 1;
+                            onPostExecute();
+                        }
+                        else {
+                            statusCode = 0;
+                            onPostExecute();
+                        }
                     }
                 }
             } catch (Exception e) {

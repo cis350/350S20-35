@@ -1,4 +1,5 @@
 package edu.upenn.cis350.pennbuddies;
+import java.util.ArrayList;
 
 public class User {
     private String name;
@@ -11,7 +12,7 @@ public class User {
     private String weight;
     private String dob;
     private String phone;
-    private String[] friends;
+    public ArrayList<String> friends;
 
     public User(String name, String username, String email, String password, String hair, String eyes,
                   String height, String weight, String dob, String phone) {
@@ -25,6 +26,7 @@ public class User {
         this.weight = weight;
         this.dob = dob;
         this.phone = phone;
+        this.friends = new ArrayList<String>();
     }
 
     public String getName() {
@@ -67,7 +69,7 @@ public class User {
         return dob;
     }
 
-    public String[] getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 
