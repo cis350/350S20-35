@@ -94,10 +94,10 @@ app.post('/checksignup', (req, res) => {
         if (err) throw err;
       });
 
-    if (location == ""){
+    if (location == null){
       hours.collection("escorts").insertOne(escortscheduleentry, function(err, result2) {
         if (err) throw err;
-        console.log("I am n escort" + escortscheduleentry);
+        console.log("I am an escort" + escortscheduleentry);
         console.log(username + " schedule inputted");
         req.session.loggedIn = true;
         req.session.currUser = username;
@@ -122,6 +122,7 @@ app.post('/checksignup', (req, res) => {
       req.session.currUser = username;
       res.render('homepage.ejs', {req: req, message: null});
     });
+
     } else {
       console.log(username + " username taken");
       res.redirect("/signup?message=User already exists or not all fields inputted.");
@@ -181,6 +182,7 @@ app.get('/getprofile', (req, res) => {
 //updates profile
 app.post('/checkeditprofile', (req, res) => {
   var people = database.db("people");
+  var hours = database.db("Hours");
 
   var user = req.session.currUser;
   var query = { username: user };
@@ -211,6 +213,11 @@ app.post('/checkeditprofile', (req, res) => {
 
       var myobj = { $set: JSON.parse(valString) };
 
+      people.collection("user").updateOne(query, myobj, function(err, result2) {
+        if (err) throw err;
+        console.log(user + " updated");
+        res.redirect("/editprofile");
+      });
       people.collection("user").updateOne(query, myobj, function(err, result2) {
         if (err) throw err;
         console.log(user + " updated");
@@ -457,6 +464,26 @@ var policeArray = [];
       db.close();
       console.log(policeArray);
       res.render('policeOfficerSchedules.ejs', {req: req, schedules: policeArray});
+    });
+  });
+
+});
+
+//renders escorts schedules page
+app.get('/escortSchedules', (req, res, next) => {
+
+var escortArray = [];
+  MongoClient.connect(url, function(err, db){
+    escortSchedules = database.db("Hours");
+    assert.equal(null, err);
+    var pointer = escortSchedules.collection('escorts').find();
+    pointer.forEach(function(doc, err){
+      assert.equal(null, err);
+      escortArray.push(doc);
+    }, function(){
+      db.close();
+      console.log(escortArray);
+      res.render('escortSchedules.ejs', {req: req, schedules: escortArray});
     });
   });
 
