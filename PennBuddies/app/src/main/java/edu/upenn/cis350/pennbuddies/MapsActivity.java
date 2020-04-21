@@ -12,6 +12,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,6 +28,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MapsActivity extends FragmentActivity implements
@@ -51,6 +63,9 @@ public class MapsActivity extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
             checkUserLocationPermission();
         }
     }
@@ -75,7 +90,20 @@ public class MapsActivity extends FragmentActivity implements
         LatLng penn = new LatLng(39.9509461, -75.1935127);
 
         mMap.addMarker(new MarkerOptions().position(penn).title("University of Pennsylvania"));
-        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(penn, 15f));
+       // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(penn, 15f));
+
+        // current location marker
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng curr = new LatLng(39.9532, -75.2013);
+        markerOptions.position(curr);
+        markerOptions.title("User Current Location");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        currentUserLocationMarker = mMap.addMarker(markerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(curr));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(curr, 15f));
+
+
+
         //Add markers for College Houses
         LatLng harnwell = new LatLng(39.9524, -75.2002);
         LatLng hill = new LatLng(39.9530, -75.1907);
@@ -102,6 +130,211 @@ public class MapsActivity extends FragmentActivity implements
         mMap.addMarker(new MarkerOptions().position(huntsman).title("Huntsman"));
         mMap.addMarker(new MarkerOptions().position(houston).title("Houston Hall"));
         mMap.addMarker(new MarkerOptions().position(hospital).title("Hospital of UPenn"));
+
+        //add call box lcoations
+        try {
+            String[] locations;
+            double[] latitudes;
+            double[] longitudes;
+
+            Log.e("ConnectionCallBox", "Connecting to HTTPS");
+            URL url = new URL("http://10.0.2.2:4000/getCallBoxLocations?id=");
+            //URL url = new URL("localhost:4000/getCallBoxLocations");
+            Log.e("Connection", "Connected");
+
+            InputStream inputStream;
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+            int responsecode = conn.getResponseCode();
+            if (responsecode != 200) {
+                throw new IllegalStateException();
+            } else {
+                int count = 0;
+                inputStream = conn.getInputStream();
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                inputStream));
+
+                StringBuilder response = new StringBuilder();
+                String currentLine;
+                while ((currentLine = in.readLine()) != null){
+                    response.append(currentLine);
+                }
+
+                String result = makeParsableString(response.toString());
+                result = result.substring(1, result.length()-1);
+
+                String[] jsonEntries = result.split("&");
+
+                locations = new String[jsonEntries.length];
+                latitudes = new double[jsonEntries.length];
+                longitudes = new double[jsonEntries.length];
+
+                for (String entry : jsonEntries){
+
+                    JSONObject object = new JSONObject(entry);
+                    JSONObject callBox = (JSONObject)object;
+
+                    String location = (String)callBox.get("location");
+                    double latitude = (double) callBox.get("latitude");
+                    double longitude = (double) callBox.get("longitude");
+
+                    locations[count] = location;
+                    latitudes[count] = latitude;
+                    longitudes[count] = longitude;
+                    count++;
+                }
+
+                for (int i = 0; i < locations.length; i++){
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title(locations[i]));
+                }
+
+                in.close();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //add police officer locations based on current time of day
+        try {
+            String[] names;
+            String[] startTimes;
+            String[] endTimes;
+            double[] latitudes;
+            double[] longitudes;
+
+            Log.e("ConnectionOfficer", "Connecting to HTTPS");
+            URL url = new URL("http://10.0.2.2:4000/getOfficerLocations?id=");
+            //URL url = new URL("localhost:4000/getCallBoxLocations");
+            Log.e("Connection", "Connected");
+
+            InputStream inputStream;
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+            int responsecode = conn.getResponseCode();
+            if (responsecode != 200) {
+                throw new IllegalStateException();
+            } else {
+                int count = 0;
+                inputStream = conn.getInputStream();
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                inputStream));
+
+                StringBuilder response = new StringBuilder();
+                String currentLine;
+                while ((currentLine = in.readLine()) != null){
+                    response.append(currentLine);
+                }
+
+                String result = makeParsableString(response.toString());
+                result = result.substring(1, result.length()-1);
+
+                String[] jsonEntries = result.split("&");
+
+                names = new String[jsonEntries.length];
+                startTimes = new String[jsonEntries.length];
+                endTimes = new String[jsonEntries.length];
+                latitudes = new double[jsonEntries.length];
+                longitudes = new double[jsonEntries.length];
+
+
+                for (String entry : jsonEntries){
+
+                    JSONObject object = new JSONObject(entry);
+                    JSONObject officer = (JSONObject)object;
+
+                    String name = (String)officer.get("name");
+                    String start = (String)officer.get("start");
+                    String end = (String)officer.get("end");
+                    double latitude = (double) officer.get("latitude");
+                    double longitude = (double) officer.get("longitude");
+
+                    names[count] = name;
+                    startTimes[count] = start;
+                    endTimes[count] = end;
+                    latitudes[count] = latitude;
+                    longitudes[count] = longitude;
+                    count++;
+                }
+
+                for (int i = 0; i < names.length; i++){
+                    //get current time
+                    Date date = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+                    String currTime = sdf.format(date);
+                    currTime = currTime.substring(0, 2) + " " + currTime.substring(currTime.length()-2);
+                    currTime = "06 PM";
+
+                    if (startTimes[i].length() == 4){
+                        startTimes[i] = "0" + startTimes[i];
+                    }
+                    if (endTimes[i].length() == 4){
+                        endTimes[i] = "0" + endTimes[i];
+                    }
+
+                    if (startTimes[i].substring(startTimes[i].length()-2).equals("PM") && endTimes[i].substring(endTimes[i].length()-2).equals("PM")
+                        && currTime.substring(currTime.length()-2).equals("AM")){
+                        continue;
+                    }
+
+                    if (startTimes[i].substring(startTimes[i].length()-2).equals("AM") && endTimes[i].substring(endTimes[i].length()-2).equals("AM")
+                            && currTime.substring(currTime.length()-2).equals("PM")){
+                        continue;
+                    }
+
+                    if (startTimes[i].substring(startTimes[i].length()-2).equals("AM") && endTimes[i].substring(endTimes[i].length()-2).equals("PM")
+                            && currTime.substring(currTime.length()-2).equals("AM") && currTime.compareTo(startTimes[i]) > 0){
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title("Officer " + names[i]));
+                    } else if (startTimes[i].substring(startTimes[i].length()-2).equals("AM") && endTimes[i].substring(endTimes[i].length()-2).equals("PM")
+                            && currTime.substring(currTime.length()-2).equals("PM") && currTime.compareTo(endTimes[i]) < 0){
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title("Officer " + names[i]));
+                    } else if (startTimes[i].substring(startTimes[i].length()-2).equals("PM") && endTimes[i].substring(endTimes[i].length()-2).equals("AM")
+                            && currTime.substring(currTime.length()-2).equals("AM") && currTime.compareTo(endTimes[i]) < 0){
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title("Officer " + names[i]));
+                    } else if(startTimes[i].substring(startTimes[i].length()-2).equals("PM") && endTimes[i].substring(endTimes[i].length()-2).equals("AM")
+                            && currTime.substring(currTime.length()-2).equals("PM") && currTime.compareTo(startTimes[i]) > 0){
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title("Officer " + names[i]));
+                    } else if(startTimes[i].substring(startTimes[i].length()-2).equals("PM") && endTimes[i].substring(endTimes[i].length()-2).equals("PM")
+                            && currTime.substring(currTime.length()-2).equals("PM") && currTime.compareTo(startTimes[i]) > 0 &&
+                            currTime.compareTo(endTimes[i]) < 0){
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title("Officer " + names[i]));
+                    } else if (startTimes[i].substring(startTimes[i].length()-2).equals("AM") && endTimes[i].substring(endTimes[i].length()-2).equals("AM")
+                            && currTime.substring(currTime.length()-2).equals("AM") && currTime.compareTo(startTimes[i]) > 0 &&
+                            currTime.compareTo(endTimes[i]) < 0){
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        mMap.addMarker(marker.position(new LatLng(latitudes[i], longitudes[i])).title("Officer " + names[i]));
+                    }
+                }
+
+                in.close();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public boolean checkUserLocationPermission(){
@@ -141,6 +374,23 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
+    public String makeParsableString(String input) {
+        StringBuilder line = new StringBuilder(input);
+        boolean inCurlyBracket = false;
+        for (int i = 0; i < line.length(); i++) {
+            char currChar = line.charAt(i);
+            if (currChar == '{') {
+                inCurlyBracket = true;
+            }
+            if (!inCurlyBracket && currChar == ',') {
+                line.setCharAt(i, '&');
+            }
+            if (currChar == '}') {
+                inCurlyBracket = false;
+            }
+        }
+        return line.toString();
+    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -183,8 +433,8 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(1100);
-        locationRequest.setFastestInterval(1100);
+        //locationRequest.setInterval(1100);
+        //locationRequest.setFastestInterval(1100);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
