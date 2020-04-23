@@ -101,6 +101,10 @@
   			color: #5D75FE;
 			}
 
+			i {
+				color: grey;
+			}
+
 	    /* Set black background color, white text and some padding */
 	    footer {
 	      background-color: #314BC5;
@@ -204,7 +208,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 			    <div class="col-sm-8 text-left">
-			      <h1><%=req.body.username%></h1>
+			      <h1><%=user%></h1>
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>

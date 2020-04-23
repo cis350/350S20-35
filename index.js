@@ -197,7 +197,6 @@ app.post('/checkeditprofile', (req, res) => {
 
       var valString = "{ ";
       for (var i = 0; i < vals.length; i++) {
-        console.log("vals[i]: " + vals[i]);
         var vs = vals[i].split(':');
 
         if (vs[1].length != 2 && vals[i].charAt(0) == '{') {
@@ -216,13 +215,7 @@ app.post('/checkeditprofile', (req, res) => {
 
       people.collection("user").updateOne(query, myobj, function(err, result2) {
         if (err) throw err;
-        console.log(user + " updated");
-        res.redirect("/editprofile");
-      });
-      people.collection("user").updateOne(query, myobj, function(err, result2) {
-        if (err) throw err;
-        console.log(user + " updated");
-        res.redirect("/editprofile");
+        res.redirect("/loadprofile");
       });
     } else {
       res.redirect("/?message=Could not find user");
@@ -637,7 +630,13 @@ app.use('/searchuser', (req, res) => {
   var people = database.db("people");
 
   var currUser = req.session.currUser;
-  var searchUser = req.body.username;
+  var searchUser = "";
+
+  if (req.body != undefined && req.body.username != undefined) {
+    searchUser = req.body.username;
+  } else {
+    searchUser = req.query.username;
+  }
 
   var alreadyFriends = false;
   var requestSent = false;
