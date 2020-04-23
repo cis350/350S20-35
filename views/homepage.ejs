@@ -124,6 +124,7 @@
         updateFriends();
 				updateIncomingRequests();
 				updateOutgoingRequests();
+				updateSuggestions();
       })
       function updateFriends() {
         $.get("/getfriends", function(data) {
@@ -192,6 +193,22 @@
 					window.setTimeout(updateOutgoingRequests, 10000);
         });
       }
+			function updateSuggestions() {
+        $.get("/getsuggestions", function(data) {
+					var suggestions = data.suggestions;
+					console.log("suggestions.length: " + suggestions.length);
+          var string = '<div class="suggestions-list"><ul class="list-group">';
+					for (var i = 0; i < suggestions.length; i++) {
+						string += '<li class="list-group-item">' + suggestions[i] + '</li>';
+					}
+					if (suggestions.length == 0) {
+						string += '<li class="list-group-item">No Friend Suggestions</li>';
+					}
+          string = string + "</ul></div>";
+          $("#suggestions-block").html(string);
+					window.setTimeout(updateSuggestions, 10000);
+        });
+      }
     </script>
 	</head>
 	<body>
@@ -228,7 +245,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 			    <div class="col-sm-8 text-left">
-			      <h1>Home</h1>
+			      <h1>Welcome!</h1>
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
@@ -266,6 +283,13 @@
 							<br>
 							<h4>Outgoing Friend Requests:</h4>
 							<div id="outgoing-requests-block" onload="updateOutgoingRequests()">
+							</div>
+						</div>
+
+						<div id="suggestions-display">
+							<br>
+							<h4>Friend Suggestions:</h4>
+							<div id="suggestions-block" onload="updateSuggestions()">
 							</div>
 						</div>
 

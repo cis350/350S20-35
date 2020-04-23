@@ -9,6 +9,7 @@ app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
 app.use(bodyParser.text({ type: 'text/html' }));
 app.use(session({resave: true, secret:"top-secret", saveUninitialized: true}));
 
+var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var url = "mongodb+srv://tannera:cis350squad@pennbuddies-aavlp.mongodb.net/test?retryWrites=true&w=majority";
@@ -380,6 +381,54 @@ app.use('/getrequests', (req, res) => {
           throw err;
         } else if (result2 != "") {
           res.json({ sent: result2[0].sent, received: result2[0].received, friends: result[0].friends });
+        } else {
+          res.redirect("/?message=Could not get requests");
+        }
+      });
+    } else {
+      res.redirect("/?message=Could not get friends");
+    }
+  });
+});
+
+//gets list of friend suggestions
+app.use('/getsuggestions', (req, res) => {
+  var people = database.db("people");
+  var user = req.session.currUser;
+
+  people.collection("friends").find({ username: user }).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+
+      people.collection("friend requests").find({ username: user }).toArray(function(err, result2) {
+        if (err) {
+          throw err;
+        } else if (result2 != "") {
+          var sent = result2[0].sent;
+          var received = result2[0].received;
+          var suggestions = [];
+
+          async.forEach (friends, function(friend, callbck) {
+            people.collection("friends").find({ username: friend }).toArray(function(err, result3) {
+              if (err) {
+                throw err;
+              } else {
+                var fr = result3[0].friends;
+
+                for (f of fr) {
+                  if ((user != f) && !friends.includes(f) && !sent.includes(f) && !received.includes(f) && !suggestions.includes(f)) {
+                    suggestions.push(f);
+                  }
+                }
+
+                callbck();
+              }
+            });
+          }, function() {
+            res.json({suggestions: suggestions});
+          });
         } else {
           res.redirect("/?message=Could not get requests");
         }
