@@ -124,6 +124,7 @@
     <script>
       $(document).ready(function() {
         updateProfile();
+				updateFriends();
       })
 
       function updateProfile() {
@@ -147,6 +148,24 @@
 
           string = string + "</ul></div>";
           $("#profile-block").html(string);
+        });
+      }
+
+			function updateFriends() {
+        $.get("/getsearchfriends/?username=" + "<%=user%>" + "&friends=" + "<%=friends%>", function(data) {
+          var friends = data.friends;
+          var string = '<div class="friends-list"><ul class="list-group">';
+					for (var i = 0; i < friends.length; i++) {
+						string += '<li class="list-group-item">' + friends[i].name + ' <i>' + friends[i].username + '</i></li>';
+					}
+					if (friends.length == 0 && alreadyFriends == "true") {
+						string += '<li class="list-group-item">No Friends</li>';
+					} else if (friends.length == 0 && alreadyFriends == "false") {
+						string += '<li class="list-group-item">No Mutual Friends</li>';
+					}
+          string = string + "</ul></div>";
+          $("#friends-block").html(string);
+					window.setTimeout(updateFriends, 10000);
         });
       }
     </script>
@@ -224,6 +243,21 @@
 							<div id="profile-block" onload="updateProfile()">
 							</div>
 						</div>
+
+						<div id="friends-display">
+							<br>
+							<%if (friends == true) { %>
+								<h4>Friends:</h4>
+							<% } else { %>
+								<h4>Mutual Friends:</h4>
+							<% } %>
+							<div id="friends-block" onload="updateFriends()">
+							</div>
+						</div>
+
+						<br>
+						<br>
+						<br>
 
 					</div>
 					<div class="col-sm-2"></div>

@@ -100,6 +100,10 @@
   			color: #5D75FE;
 			}
 
+			i {
+				color: grey;
+			}
+
 	    /* Set black background color, white text and some padding */
 	    footer {
 	      background-color: #314BC5;
@@ -128,10 +132,10 @@
       })
       function updateFriends() {
         $.get("/getfriends", function(data) {
-          var friends = data.profile.friends;
+          var friends = data.friends;
           var string = '<div class="friends-list"><ul class="list-group">';
 					for (var i = 0; i < friends.length; i++) {
-						string += '<li class="list-group-item">' + friends[i] + '</li>';
+						string += '<li class="list-group-item">' + friends[i].name + ' <i>' + friends[i].username + '</i></li>';
 					}
 					if (friends.length == 0) {
 						string += '<li class="list-group-item">No Friends</li>';
@@ -142,24 +146,13 @@
         });
       }
 			function updateIncomingRequests() {
-        $.get("/getrequests", function(data) {
-          var received = data.received;
-					var friends = data.friends;
-					var count = 0;
-          var string = '<div class="incoming-requests-list"><ul class="list-group">';
+        $.get("/getreceivedrequests", function(data) {
+					var received = data.received;
+          var string = '<div class="received-list"><ul class="list-group">';
 					for (var i = 0; i < received.length; i++) {
-						var alreadyFriends = false;
-						for (var j = 0; j < friends.length; j++) {
-							if (friends[j] == received[i]) {
-								alreadyFriends = true;
-							}
-						}
-						if (!alreadyFriends) {
-							string += '<li class="list-group-item">' + received[i] + '</li>';
-							count++;
-						}
+						string += '<li class="list-group-item">' + received[i].name + ' <i>' + received[i].username + '</i></li>';
 					}
-					if (count == 0) {
+					if (received.length == 0) {
 						string += '<li class="list-group-item">No Incoming Requests</li>';
 					}
           string = string + "</ul></div>";
@@ -168,25 +161,14 @@
         });
       }
 			function updateOutgoingRequests() {
-        $.get("/getrequests", function(data) {
-          var sent = data.sent;
-					var friends = data.friends;
-					var count = 0;
-          var string = '<div class="outgoing-requests-list"><ul class="list-group">';
+        $.get("/getsentrequests", function(data) {
+					var sent = data.sent;
+          var string = '<div class="sent-list"><ul class="list-group">';
 					for (var i = 0; i < sent.length; i++) {
-						var alreadyFriends = false;
-						for (var j = 0; j < friends.length; j++) {
-							if (friends[j] == sent[i]) {
-								alreadyFriends = true;
-							}
-						}
-						if (!alreadyFriends) {
-							string += '<li class="list-group-item">' + sent[i] + '</li>';
-							count++;
-						}
+						string += '<li class="list-group-item">' + sent[i].name + ' <i>' + sent[i].username + '</i></li>';
 					}
-					if (count == 0) {
-						string += '<li class="list-group-item">No Incoming Requests</li>';
+					if (sent.length == 0) {
+						string += '<li class="list-group-item">No Outgoing Requests</li>';
 					}
           string = string + "</ul></div>";
           $("#outgoing-requests-block").html(string);
@@ -196,10 +178,9 @@
 			function updateSuggestions() {
         $.get("/getsuggestions", function(data) {
 					var suggestions = data.suggestions;
-					console.log("suggestions.length: " + suggestions.length);
           var string = '<div class="suggestions-list"><ul class="list-group">';
 					for (var i = 0; i < suggestions.length; i++) {
-						string += '<li class="list-group-item">' + suggestions[i] + '</li>';
+						string += '<li class="list-group-item">' + suggestions[i].name + ' <i>' + suggestions[i].username + '</i></li>';
 					}
 					if (suggestions.length == 0) {
 						string += '<li class="list-group-item">No Friend Suggestions</li>';
