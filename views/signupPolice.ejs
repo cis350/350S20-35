@@ -124,10 +124,10 @@
 	      }
 	      .row.content {height:auto;}
 	    }
-			</style>
-		</head>
-		<body>
-			<div class="container-fluid">
+	  </style>
+	</head>
+	<body>
+		<div class="container-fluid">
 			<nav class="navbar navbar-custom">
 			  <div class="container-fluid">
 			    <div class="navbar-header">
@@ -150,7 +150,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 					<div class="col-sm-8 text-left">
-			      <h1>Sign Up</h1>
+			      <h1>Police Officer Sign Up</h1>
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
@@ -163,7 +163,7 @@
 						<div class="checksignup">
 							<form class="form-horizontal" method="post" action="/checksignup">
 								<div class="form-group required">
-    							<label class="control-label col-sm-2" for="id"> Student ID:</label>
+    							<label class="control-label col-sm-2" for="id"> Police ID:</label>
 	    						<div class="col-sm-10">
       							<input type="text" class="form-control" id="id" name="_id" size="20" placeholder="Enter your student ID" required="required">
     							</div>
@@ -198,6 +198,24 @@
       							<input type="text" class="form-control" id="email" name="email" size="20" placeholder="Enter your email address" required="required">
     							</div>
   							</div>
+								<div class="form-group required">
+									<label class="control-label col-sm-2" for="location"> Station Location:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="location" name="location" size="20" placeholder="Enter your station's address" required="required">
+									</div>
+								</div>
+								<div class="form-group required">
+									<label class="control-label col-sm-2" for="start"> Shift Start:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="start" name="start" size="20" placeholder="Enter Shift Start Time." required="required">
+									</div>
+								</div>
+								<div class="form-group required">
+									<label class="control-label col-sm-2" for="end"> Shift End:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="end" name="end" size="20" placeholder="Enter Shift End Time." required="required">
+									</div>
+								</div>
 								<div class="form-group">
     							<label class="control-label col-sm-2" for="birthdate"> Birthdate:</label>
 	    						<div class="col-sm-10">
@@ -235,7 +253,9 @@
     							</div>
   							</div>
 
-								<button type="submit" class="submitButton">Student Signup</button>
+
+
+								<button type="submit" class="submitButton">Signup</button>
 							</form>
 						</div>
 
@@ -251,7 +271,7 @@
 		</div>
 
 		<footer class="container-fluid text-center">
-			<p>Alexandra Tanner, Avni Ahuja, Divya Somayajula, Harshini Thinakaran</p>
+		  <p>Alexandra Tanner, Avni Ahuja, Divya Somayajula, Harshini Thinakaran</p>
 		</footer>
 	</body>
-	</html>
+</html>

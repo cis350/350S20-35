@@ -9,6 +9,7 @@ app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
 app.use(bodyParser.text({ type: 'text/html' }));
 app.use(session({resave: true, secret:"top-secret", saveUninitialized: true}));
 
+var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var url = "mongodb+srv://tannera:cis350squad@pennbuddies-aavlp.mongodb.net/test?retryWrites=true&w=majority";
@@ -36,14 +37,26 @@ app.get('/signupUser', (req, res) => {
   res.render('signupUser.ejs', {req: req, message: null});
 });
 
-//renders signup page
+//renders student signup page
 app.get('/signup', (req, res) => {
   res.render('signup.ejs', {req: req, message: null});
+});
+
+//renders police signup page
+app.get('/signupPolice', (req, res) => {
+  res.render('signupPolice.ejs', {req: req, message: null});
+});
+
+//renders escort signup page
+app.get('/signupEscort', (req, res) => {
+  res.render('signupEscort.ejs', {req: req, message: null});
 });
 
 //checks if username is taken, if not signs user up
 app.post('/checksignup', (req, res) => {
   var people = database.db("people");
+  var hours = database.db("Hours");
+
 
   var query = { username: req.body.username };
   var id = req.body._id;
@@ -52,11 +65,18 @@ app.post('/checksignup', (req, res) => {
   var name = req.body.name;
   var phone = req.body.phone;
   var email = req.body.email;
+  var location = req.body.location;
+  var start = req.body.start;
+  var end = req.body.end;
 
   var friendsentry = {username : username, friends : []};
   var historyentry = {username : username, walks : []};
   var requestentry = {username : username, sent : [], received : []};
   var walkrequestentry = {username : username, sent : [], received : []};
+  var policescheduleentry = {Name: name, Start : start, End : end, Location : location};
+  var escortscheduleentry = {Name: name, Start : start, End : end};
+
+
 
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
@@ -74,13 +94,36 @@ app.post('/checksignup', (req, res) => {
       people.collection("walk requests").insertOne(walkrequestentry, function(err, result2) {
         if (err) throw err;
       });
-      people.collection("user").insertOne(req.body, function(err, result2) {
+
+    if (location == null){
+      hours.collection("escorts").insertOne(escortscheduleentry, function(err, result2) {
         if (err) throw err;
-        console.log(username + " signed up");
+        console.log("I am an escort" + escortscheduleentry);
+        console.log(username + " schedule inputted");
         req.session.loggedIn = true;
-    	  req.session.currUser = username;
+        req.session.currUser = username;
+        res.render('homepage.ejs', {req: req, message: null});
+  });
+
+}
+    else{
+      hours.collection("police officers").insertOne(policescheduleentry, function(err, result2) {
+        if (err) throw err;
+        console.log("I am a police officer" + policescheduleentry);
+        console.log(username + " schedule inputted");
+        req.session.loggedIn = true;
+        req.session.currUser = username;
         res.render('homepage.ejs', {req: req, message: null});
       });
+    }
+    people.collection("user").insertOne(req.body, function(err, result2) {
+      if (err) throw err;
+      console.log(username + " signed up");
+      req.session.loggedIn = true;
+      req.session.currUser = username;
+      res.render('homepage.ejs', {req: req, message: null});
+    });
+
     } else {
       console.log(username + " username taken");
       res.redirect("/signup?message=User already exists or not all fields inputted.");
@@ -140,6 +183,7 @@ app.get('/getprofile', (req, res) => {
 //updates profile
 app.post('/checkeditprofile', (req, res) => {
   var people = database.db("people");
+  var hours = database.db("Hours");
 
   var user = req.session.currUser;
   var query = { username: user };
@@ -153,7 +197,6 @@ app.post('/checkeditprofile', (req, res) => {
 
       var valString = "{ ";
       for (var i = 0; i < vals.length; i++) {
-        console.log("vals[i]: " + vals[i]);
         var vs = vals[i].split(':');
 
         if (vs[1].length != 2 && vals[i].charAt(0) == '{') {
@@ -172,8 +215,7 @@ app.post('/checkeditprofile', (req, res) => {
 
       people.collection("user").updateOne(query, myobj, function(err, result2) {
         if (err) throw err;
-        console.log(user + " updated");
-        res.redirect("/editprofile");
+        res.redirect("/loadprofile");
       });
     } else {
       res.redirect("/?message=Could not find user");
@@ -309,15 +351,29 @@ app.use('/getfriends', (req, res) => {
     if (err) {
       throw err;
     } else if (result != "") {
-      res.json({ profile: result[0] });
+      var friends = result[0].friends;
+      var nameList = [];
+
+      async.forEach (friends, function(friend, callbck) {
+        people.collection("user").find({ username: friend }).toArray(function(err, result2) {
+          if (err) {
+            throw err;
+          } else {
+            nameList.push(result2[0]);
+            callbck();
+          }
+        });
+      }, function() {
+        res.json({friends: nameList});
+      });
     } else {
       res.redirect("/?message=Could not get friends");
     }
   });
 });
 
-//gets list of friends
-app.use('/getrequests', (req, res) => {
+//gets sent requests
+app.use('/getsentrequests', (req, res) => {
   var people = database.db("people");
 
   var user = req.session.currUser;
@@ -327,11 +383,134 @@ app.use('/getrequests', (req, res) => {
     if (err) {
       throw err;
     } else if (result != "") {
+      var friends = result[0].friends;
+
       people.collection("friend requests").find(query).toArray(function(err, result2) {
         if (err) {
           throw err;
         } else if (result2 != "") {
-          res.json({ sent: result2[0].sent, received: result2[0].received, friends: result[0].friends });
+          var sent = result2[0].sent;
+          var sentList = [];
+
+          async.forEach (sent, function(friend, callbck) {
+            if (!friends.includes(friend)) {
+              people.collection("user").find({ username: friend }).toArray(function(err, result3) {
+                if (err) {
+                  throw err;
+                } else {
+                  sentList.push(result3[0]);
+                  callbck();
+                }
+              });
+            } else {
+              callbck();
+            }
+          }, function() {
+            res.json({sent: sentList});
+          });
+        } else {
+          res.redirect("/?message=Could not get requests");
+        }
+      });
+    } else {
+      res.redirect("/?message=Could not get friends");
+    }
+  });
+});
+
+//gets received requests
+app.use('/getreceivedrequests', (req, res) => {
+  var people = database.db("people");
+
+  var user = req.session.currUser;
+  var query = { username: user};
+
+  people.collection("friends").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+
+      people.collection("friend requests").find(query).toArray(function(err, result2) {
+        if (err) {
+          throw err;
+        } else if (result2 != "") {
+          var received = result2[0].received;
+          var receivedList = [];
+
+          async.forEach (received, function(friend, callbck) {
+            if (!friends.includes(friend)) {
+              people.collection("user").find({ username: friend }).toArray(function(err, result3) {
+                if (err) {
+                  throw err;
+                } else {
+                  receivedList.push(result3[0]);
+                  callbck();
+                }
+              });
+            } else {
+              callbck();
+            }
+          }, function() {
+            res.json({received: receivedList});
+          });
+        } else {
+          res.redirect("/?message=Could not get requests");
+        }
+      });
+    } else {
+      res.redirect("/?message=Could not get friends");
+    }
+  });
+});
+
+//gets list of friend suggestions
+app.use('/getsuggestions', (req, res) => {
+  var people = database.db("people");
+  var user = req.session.currUser;
+
+  people.collection("friends").find({ username: user }).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+
+      people.collection("friend requests").find({ username: user }).toArray(function(err, result2) {
+        if (err) {
+          throw err;
+        } else if (result2 != "") {
+          var sent = result2[0].sent;
+          var received = result2[0].received;
+          var suggestions = [];
+
+          async.forEach (friends, function(friend, callbck) {
+            people.collection("friends").find({ username: friend }).toArray(function(err, result3) {
+              if (err) {
+                throw err;
+              } else {
+                var fr = result3[0].friends;
+
+                async.forEach (fr, function(f, callbck2) {
+                  if ((user != f) && !friends.includes(f) && !sent.includes(f) && !received.includes(f) && !suggestions.includes(f)) {
+                    people.collection("user").find({ username: f }).toArray(function(err, result3) {
+                      if (err) {
+                        throw err;
+                      } else {
+                        suggestions.push(result3[0]);
+                        callbck2();
+                      }
+                    });
+                  } else {
+                    callbck2();
+                  }
+                }, function() {
+                  callbck();
+                });
+              }
+            });
+          }, function() {
+            res.json({suggestions: suggestions});
+          });
         } else {
           res.redirect("/?message=Could not get requests");
         }
@@ -421,6 +600,26 @@ var policeArray = [];
 
 });
 
+//renders escorts schedules page
+app.get('/escortSchedules', (req, res, next) => {
+
+var escortArray = [];
+  MongoClient.connect(url, function(err, db){
+    escortSchedules = database.db("Hours");
+    assert.equal(null, err);
+    var pointer = escortSchedules.collection('escorts').find();
+    pointer.forEach(function(doc, err){
+      assert.equal(null, err);
+      escortArray.push(doc);
+    }, function(){
+      db.close();
+      console.log(escortArray);
+      res.render('escortSchedules.ejs', {req: req, schedules: escortArray});
+    });
+  });
+
+});
+
 //renders resources page
 app.use('/loadresources', (req, res) => {
   res.render('resources.ejs', {req: req, message: null});
@@ -431,7 +630,13 @@ app.use('/searchuser', (req, res) => {
   var people = database.db("people");
 
   var currUser = req.session.currUser;
-  var searchUser = req.body.username;
+  var searchUser = "";
+
+  if (req.body != undefined && req.body.username != undefined) {
+    searchUser = req.body.username;
+  } else {
+    searchUser = req.query.username;
+  }
 
   var alreadyFriends = false;
   var requestSent = false;
@@ -498,6 +703,66 @@ app.get('/getsearchprofile', (req, res) => {
       res.json({ profile: result[0], friends: alreadyFriends });
     } else {
       res.redirect("/?message=Could not load profile");
+    }
+  });
+});
+
+//gets other user's friends list
+app.get('/getsearchfriends', (req, res) => {
+  var people = database.db("people");
+
+  var currUser = req.session.currUser;
+  var searchUser = req.query.username;
+  var alreadyFriends = req.query.friends;
+
+  people.collection("friends").find({ username: searchUser }).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var friends = result[0].friends;
+      var nameList = [];
+
+      if (alreadyFriends == "false") {
+        people.collection("friends").find({ username: currUser }).toArray(function(err, result2) {
+          if (err) {
+            throw err;
+          } else {
+            var currFriends = result2[0].friends;
+
+            async.forEach (friends, function(friend, callbck) {
+              if (currFriends.includes(friend)) {
+                people.collection("user").find({ username: friend }).toArray(function(err, result3) {
+                  if (err) {
+                    throw err;
+                  } else {
+                    nameList.push(result3[0]);
+                    callbck();
+                  }
+                });
+              } else {
+                callbck();
+              }
+            }, function() {
+              res.json({friends: nameList, alreadyFriends: alreadyFriends});
+            });
+          }
+        });
+      } else {
+        async.forEach (friends, function(friend, callbck) {
+          people.collection("user").find({ username: friend }).toArray(function(err, result3) {
+            if (err) {
+              throw err;
+            } else {
+              nameList.push(result3[0]);
+              callbck();
+            }
+          });
+        }, function() {
+          res.json({friends: nameList, alreadyFriends: alreadyFriends});
+        });
+      }
+    } else {
+      res.redirect("/?message=Could not get friends");
     }
   });
 });

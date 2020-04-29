@@ -48,6 +48,7 @@ app.use('/queryPassword', (req, res) => {
                   // throw err;
                   res.redirect("/editprofile?message=Could not load profile4");
                 } else if (result != "") {
+                    // res.redirect("/editprofile?password=" + result[0].name);
                   res.json({'password': result[0].password});
                   currentEmail = email;
                 } else {
@@ -66,6 +67,7 @@ app.use('/currentUser', (req, res) => {
     var people = database.db("people");
 
     people.collection("user").find({email : email}).toArray(function(err, result) {
+<<<<<<< HEAD
       if (result == "") {
         res.json({'password': ""})
       } else {
@@ -107,6 +109,22 @@ app.use('/currentUser', (req, res) => {
       }
         // res.json({'password': result[0].password});
         
+=======
+        // res.json({'password': result[0].password});
+        res.json(
+            {'name' : result[0].name,
+            'username': result[0].username,
+            'password' : result[0].password,
+            'email' : result[0].email,
+            'hair' : result[0].hair,
+            'eyes' : result[0].eyes,
+            'dob' : result[0].birthdate,
+            'phone' : result[0].phone,
+            'height' : result[0].height,
+            'weight' : result[0].weight,
+            'gender' : result[0].gender,
+        });
+>>>>>>> 1b7aad4ad43dd4e8abcad9ba7e15b9ab7c245353
     });
 });
 
@@ -130,19 +148,15 @@ app.use('/sendfriendrequestMobile', (req, res) => {
   var alreadySent = false;
 
   if (friend != undefined) {
-    console.log("here");
-    people.collection("user").find(query2).toArray(function(err, result20) {
-      console.log("result:" + result20 + ".");
-      if (err) {
-        console.log("err");
-        throw err;
-      }
-      if (result20 == "") {
-          console.log("blank");
-          abort = true;
-          console.log("abort: "+ abort);
-          data = {"status": "error finding user"};
-      }
+    people.collection("user").find(query2).toArray(function(err, result) {
+        if (err) {
+            abort = true;
+            data = {"status": "error finding user"};
+            res.json(data);
+        }
+        else {
+            abort = false;
+        }
     })
 } else {
     abort = true;
@@ -189,7 +203,7 @@ if (abort == false) {
                     if (err) {
                       throw err;
                     } else {
-                      data = ({"status": "sent"});
+                      res.redirect("/");
                     }
                   });
                 } else {
@@ -210,6 +224,7 @@ if (abort == false) {
   }
 });
 
+<<<<<<< HEAD
 
 //searches for a friend and sends a friend request to them
 app.use('/acceptfriendrequestMobile', (req, res) => {
@@ -436,7 +451,6 @@ app.use('/acceptwalkrequest', (req, res) => {
   }
 });
 
-
 //gets list of friends
 app.use('/getfriends', (req, res) => {
   var people = database.db("people");
@@ -495,6 +509,46 @@ app.use('/getIncomingRequests', (req, res) => {
   });
 });
 
+//gets call boxes locations
+app.use('/getCallBoxLocations', (req, res) => {
+  var location = database.db("Locations");
+  var locationCoordinates = [];
+
+  location.collection("Call Boxes").find({}).toArray(function(err, result) {
+    if (err){
+      throw err;
+    } else if (result != null){
+      result.forEach( (doc) => {
+        locationCoordinates.push( {'location' : doc.Location, 'latitude' : doc.latitude,
+          'longitude' : doc.longitude});
+    });
+    res.json(locationCoordinates);
+  } else{
+    res.redirect("/?message=Could not get call box locations");
+  }
+  });
+});
+
+//gets police officer Locations
+app.use('/getOfficerLocations', (req, res) => {
+  var hours = database.db("Hours");
+  var officers = [];
+
+  hours.collection("police officers").find({}).toArray(function(err, result) {
+    if (err){
+      throw err;
+    } else if (result != null){
+      result.forEach( (doc) => {
+        officers.push({'name' : doc.Name, 'start': doc.Start, 'end': doc.End,
+        'latitude': doc.Latitude, 'longitude': doc.Longitude});
+      });
+      res.json(officers);
+    } else{
+      res.redirect('/?message=Could not get police officer locations');
+    }
+  });
+});
+
 // This is the '/test' endpoint that you can use to check that this works
 // Do not change this, as you will want to use it to check the test code in Part 2
 app.use('/test', (req, res) => {
@@ -504,13 +558,12 @@ app.use('/test', (req, res) => {
     res.json(data);
 });
 
-
 // This just sends back a message for any URL path not covered above
 app.use('/', (req, res) => {
     res.send('Default message.');
 });
 
-// This starts the web server on port 4000. 
+// This starts the web server on port 4000.
 app.listen(4000, () => {
     console.log('Listening on port 4000');
 });

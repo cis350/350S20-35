@@ -150,6 +150,10 @@
           string += '<li class="list-group-item"><b>Hair Color: </b>' + profile.hair + '</li>';
           string += '<li class="list-group-item"><b>Eye Color: </b>' + profile.eyes + '</li>';
 					string += '<li class="list-group-item"><b>Gender: </b>' + profile.gender + '</li>';
+					string += '<li class="list-group-item"><b>Station Location: </b>' + profile.location + '</li>';
+					string += '<li class="list-group-item"><b>Shift Start: </b>' + profile.start + '</li>';
+					string += '<li class="list-group-item"><b>Shift End: </b>' + profile.end + '</li>';
+
           string = string + "</ul></div>";
 
           $("#profile-block").html(string);

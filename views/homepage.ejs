@@ -100,6 +100,10 @@
   			color: #5D75FE;
 			}
 
+			i {
+				color: grey;
+			}
+
 	    /* Set black background color, white text and some padding */
 	    footer {
 	      background-color: #314BC5;
@@ -124,72 +128,66 @@
         updateFriends();
 				updateIncomingRequests();
 				updateOutgoingRequests();
+				updateSuggestions();
       })
       function updateFriends() {
         $.get("/getfriends", function(data) {
-          var friends = data.profile.friends;
-          var string = '<div class="friends-list"><ul class="list-group">';
+          var friends = data.friends;
+          var string = '<div class="list-group">';
 					for (var i = 0; i < friends.length; i++) {
-						string += '<li class="list-group-item">' + friends[i] + '</li>';
+						string += '<a href="' + '/searchuser/?username=' + friends[i].username + '" class="list-group-item">' + friends[i].name + ' <i>' + friends[i].username + '</i></a>';
 					}
 					if (friends.length == 0) {
 						string += '<li class="list-group-item">No Friends</li>';
 					}
-          string = string + "</ul></div>";
+          string = string + "</div>";
           $("#friends-block").html(string);
 					window.setTimeout(updateFriends, 10000);
         });
       }
 			function updateIncomingRequests() {
-        $.get("/getrequests", function(data) {
-          var received = data.received;
-					var friends = data.friends;
-					var count = 0;
-          var string = '<div class="incoming-requests-list"><ul class="list-group">';
+        $.get("/getreceivedrequests", function(data) {
+					var received = data.received;
+          var string = '<div class="list-group">';
 					for (var i = 0; i < received.length; i++) {
-						var alreadyFriends = false;
-						for (var j = 0; j < friends.length; j++) {
-							if (friends[j] == received[i]) {
-								alreadyFriends = true;
-							}
-						}
-						if (!alreadyFriends) {
-							string += '<li class="list-group-item">' + received[i] + '</li>';
-							count++;
-						}
+						string += '<a href="' + '/searchuser/?username=' + received[i].username + '" class="list-group-item">' + received[i].name + ' <i>' + received[i].username + '</i></a>';
 					}
-					if (count == 0) {
+					if (received.length == 0) {
 						string += '<li class="list-group-item">No Incoming Requests</li>';
 					}
-          string = string + "</ul></div>";
+          string = string + "</div>";
           $("#incoming-requests-block").html(string);
 					window.setTimeout(updateIncomingRequests, 10000);
         });
       }
 			function updateOutgoingRequests() {
-        $.get("/getrequests", function(data) {
-          var sent = data.sent;
-					var friends = data.friends;
-					var count = 0;
-          var string = '<div class="outgoing-requests-list"><ul class="list-group">';
+        $.get("/getsentrequests", function(data) {
+					var sent = data.sent;
+          var string = '<div class="list-group">';
 					for (var i = 0; i < sent.length; i++) {
-						var alreadyFriends = false;
-						for (var j = 0; j < friends.length; j++) {
-							if (friends[j] == sent[i]) {
-								alreadyFriends = true;
-							}
-						}
-						if (!alreadyFriends) {
-							string += '<li class="list-group-item">' + sent[i] + '</li>';
-							count++;
-						}
+						string += '<a href="' + '/searchuser/?username=' + sent[i].username + '" class="list-group-item">' + sent[i].name + ' <i>' + sent[i].username + '</i></a>';
 					}
-					if (count == 0) {
-						string += '<li class="list-group-item">No Incoming Requests</li>';
+					if (sent.length == 0) {
+						string += '<li class="list-group-item">No Outgoing Requests</li>';
 					}
-          string = string + "</ul></div>";
+          string = string + "</div>";
           $("#outgoing-requests-block").html(string);
 					window.setTimeout(updateOutgoingRequests, 10000);
+        });
+      }
+			function updateSuggestions() {
+        $.get("/getsuggestions", function(data) {
+					var suggestions = data.suggestions;
+          var string = '<div class="list-group">';
+					for (var i = 0; i < suggestions.length; i++) {
+						string += '<a href="' + '/searchuser/?username=' + suggestions[i].username + '" class="list-group-item">' + suggestions[i].name + ' <i>' + suggestions[i].username + '</i></a>';
+					}
+					if (suggestions.length == 0) {
+						string += '<li class="list-group-item">No Friend Suggestions</li>';
+					}
+          string = string + "</div>";
+          $("#suggestions-block").html(string);
+					window.setTimeout(updateSuggestions, 10000);
         });
       }
     </script>
@@ -228,7 +226,7 @@
 			  <div class="row content">
 					<div class="col-sm-2"></div>
 			    <div class="col-sm-8 text-left">
-			      <h1>Home</h1>
+			      <h1>Welcome!</h1>
 
 						<div class="displayerrormessage">
 							<%if (req.query.message != null) { %>
@@ -266,6 +264,13 @@
 							<br>
 							<h4>Outgoing Friend Requests:</h4>
 							<div id="outgoing-requests-block" onload="updateOutgoingRequests()">
+							</div>
+						</div>
+
+						<div id="suggestions-display">
+							<br>
+							<h4>Friend Suggestions:</h4>
+							<div id="suggestions-block" onload="updateSuggestions()">
 							</div>
 						</div>
 

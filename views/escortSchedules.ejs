@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<title>PennBuddies</title>
+		<title>PennBuddies Escort Schedules</title>
 		<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -62,21 +62,16 @@
 				text-align: center;
 			}
 
-			.signupUserButton {
-				background-color: #2465DD;
-				width: 200px;
-				height: 65px;
+			.signupButton {
 				border: none;
-  			color: white;
+  			color: #5D75FE;
 				display: inline-block;
-				border-radius: 40px;
+				border-radius: 12px;
 				text-decoration: none;
-				font-family: Brawler;
-				font-style: 16px;
-				font-size: 25px;
+				font-family: Roboto;
+				font-style: normal;
+				font-size: 12px;
 				text-align: center;
-				margin: 4px 2px;
-				cursor: pointer;
 			}
 
 			/* Remove the navbar's default margin-bottom and rounded borders */
@@ -95,7 +90,7 @@
 			/* change the link color */
 			.navbar-custom .navbar-nav .nav-link {
     		color: #5D75FE;
-
+			}
 
 			/* change the color of active or hovered links */
 			.navbar-custom .nav-item.active .nav-link, .navbar-custom .nav-item:hover .nav-link {
@@ -137,13 +132,21 @@
 			        <span class="icon-bar"></span>
 			      </button>
 			      <a class="navbar-brand" href="/">PennBuddies</a>
-						<br>
-
 			    </div>
 			    <div class="collapse navbar-collapse" id="myNavbar">
 			      <ul class="nav navbar-nav">
-			        <li class="active"><a class="nav-link" href="/">Home</a></li>
+			        <li class="active"><a href="/">Home</a></li>
+							<li><a href="/loadprofile">Profile</a></li>
+						  <li><a href="/loadhistory">History</a></li>
+						  <li><a href="/loadresources">Resources</a></li>
+							<li><a href="https://www.facilities.upenn.edu/maps">Campus Map!</a></li>
 			      </ul>
+						<ul class="nav navbar-nav navbar-right">
+							<%if (req.session.currUser != null) { %>
+								<p class="navbar-text"><%=req.session.currUser%></p>
+								<li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+							<% } %>
+						</ul>
 			    </div>
 			  </div>
 			</nav>
@@ -151,47 +154,27 @@
 			<div class="container-fluid text-center">
 			  <div class="row content">
 					<div class="col-sm-2"></div>
-					<div class="col-sm-8 text-left">
-			      <h1>Pick which type of user.</h1>
+			    <div class="col-sm-8 text-left">
+			      <h1>Escort Schedules</h1>
 
-						<div class="displayerrormessage">
-							<%if (req.query.message != null) { %>
-									<div class="alert alert-danger">
-										<strong>Danger!</strong> <%= req.query.message %>
-									</div>
-							<% } %>
-						</div>
+						<div class="getSchedules">
+					 <% schedules.forEach((schedule) => { %>
+							 <h4 class="Name" type ="text"><font size="+2">Escort <%= schedule.Name %></font></h4>
+							 <h4 class="Start" type ="text">Shift Start: <%= schedule.Start %></h4>
+							 <h4 class="End" type ="text">Shift End: <%= schedule.End %></h4>
 
+						 </a>
+					 <% }) %>
+				 </div>
 
-						<div class="policeOfficerSignUp">
-							<form method="get" action="/signupPolice">
-								<button type="submit" class="signupUserButton">Police Officer</button>
-							</form>
-					</div>
+			 </div>
+			 <div class="col-sm-2"></div>
+			 </div>
+			 </div>
+			 </div>
 
-					<div class="escortSignUp">
-						<form method="get" action="/signupEscort">
-							<button type="submit" class="signupUserButton">Escort</button>
-						</form>
-				</div>
-
-					<div class="regSignUp">
-						<form method="get" action="/signup">
-							<button type="submit" class="signupUserButton">Student</button>
-						</form>
-				</div>
-
-
-										<br>
-										<br>
-										<br>
-										<br>
-
-									</div>
-									<div class="col-sm-2"></div>
-								</div>
-							</div>
-						</div>
-					</body>
-	
-					</html>
+			 <footer class="container-fluid text-center">
+			 <p>Alexandra Tanner, Avni Ahuja, Divya Somayajula, Harshini Thinakaran</p>
+			 </footer>
+			 </body>
+			 </html>
