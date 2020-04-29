@@ -67,7 +67,6 @@ app.use('/currentUser', (req, res) => {
     var people = database.db("people");
 
     people.collection("user").find({email : email}).toArray(function(err, result) {
-<<<<<<< HEAD
       if (result == "") {
         res.json({'password': ""})
       } else {
@@ -107,24 +106,6 @@ app.use('/currentUser', (req, res) => {
 
 
       }
-        // res.json({'password': result[0].password});
-        
-=======
-        // res.json({'password': result[0].password});
-        res.json(
-            {'name' : result[0].name,
-            'username': result[0].username,
-            'password' : result[0].password,
-            'email' : result[0].email,
-            'hair' : result[0].hair,
-            'eyes' : result[0].eyes,
-            'dob' : result[0].birthdate,
-            'phone' : result[0].phone,
-            'height' : result[0].height,
-            'weight' : result[0].weight,
-            'gender' : result[0].gender,
-        });
->>>>>>> 1b7aad4ad43dd4e8abcad9ba7e15b9ab7c245353
     });
 });
 
@@ -224,7 +205,6 @@ if (abort == false) {
   }
 });
 
-<<<<<<< HEAD
 
 //searches for a friend and sends a friend request to them
 app.use('/acceptfriendrequestMobile', (req, res) => {
