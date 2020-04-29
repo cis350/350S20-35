@@ -134,17 +134,6 @@ public class Buddies extends AppCompatActivity {
     }
 
     public void testNotifications(View v) {
-
-//        NotificationCompat.Builder notificationBuilder =
-//                new NotificationCompat.Builder(this)
-//                        .setSmallIcon(R.drawable.login_logo)
-//                        .setChannelId(NotificationChannel.DEFAULT_CHANNEL_ID)
-//                        .setContentTitle("Your buddy is almost there!")
-//                        .setContentText("Divya is 2 minutes away.");
-//        NotificationManager notificationManager = (NotificationManager) getSystemService
-//                (Context.NOTIFICATION_SERVICE);
-//        notificationManager.notify(1, notificationBuilder.build());
-
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -157,7 +146,7 @@ public class Buddies extends AppCompatActivity {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
                 .setSmallIcon(R.drawable.logo) // notification icon
                 .setContentTitle("Your buddy is almost there!") // title for notification
-                .setContentText("Divya is 2 minutes away.")// message for notification
+                .setContentText("Your buddy is 2 minutes away.")// message for notification
                 .setAutoCancel(true); // clear notification after click
         Intent intent = new Intent(getApplicationContext(), Buddies.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

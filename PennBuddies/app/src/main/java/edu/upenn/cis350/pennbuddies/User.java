@@ -13,6 +13,7 @@ public class User {
     private String dob;
     private String phone;
     public ArrayList<String> friends;
+    public ArrayList<String> history;
 
     public User(String name, String username, String email, String password, String hair, String eyes,
                   String height, String weight, String dob, String phone) {
@@ -27,6 +28,7 @@ public class User {
         this.dob = dob;
         this.phone = phone;
         this.friends = new ArrayList<String>();
+        this.history = new ArrayList<String>();
     }
 
     public String getName() {
@@ -71,6 +73,10 @@ public class User {
 
     public ArrayList<String> getFriends() {
         return friends;
+    }
+
+    public ArrayList<String> getHistory() {
+        return history;
     }
 
 }

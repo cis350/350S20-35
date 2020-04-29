@@ -69,19 +69,41 @@ app.use('/currentUser', (req, res) => {
       if (result == "") {
         res.json({'password': ""})
       } else {
-        res.json(
-            {'name' : result[0].name,
-            'username': result[0].username, 
-            'password' : result[0].password,
-            'email' : result[0].email,
-            'hair' : result[0].hair,
-            'eyes' : result[0].eyes,
-            'dob' : result[0].birthdate,
-            'phone' : result[0].phone,
-            'height' : result[0].height,
-            'weight' : result[0].weight,
-            'gender' : result[0].gender,
+        var username = result[0].username;
+        var name = result[0].name;
+        var password = result[0].password;
+        var email = result[0].email;
+        var hair = result[0].hair;
+        var phone = result[0].phone;
+        var eyes = result[0].eyes;
+        var dob = result[0].birthdate;
+        var height = result[0].height;
+        var weight = result[0].weight;
+        var gender = result[0].gender;
+
+        people.collection("history").find({username : username}).toArray(function(err, result2) {
+          if (result == "") {
+            var history = [];
+          } else {
+            var history = result2[0].walks;
+          }
+          res.json(
+            {'name' : name,
+            'username': username, 
+            'password' : password,
+            'email' : email,
+            'hair' : hair,
+            'eyes' : eyes,
+            'dob' : dob,
+            'phone' : phone,
+            'height' : height,
+            'weight' : weight,
+            'gender' : gender,
+            'history' : history,
         });
+        });
+
+
       }
         // res.json({'password': result[0].password});
         
@@ -247,6 +269,174 @@ app.use('/acceptfriendrequestMobile', (req, res) => {
   }
 });
 
+
+//searches for a friend and sends a walk request to them
+app.use('/sendwalkrequest', (req, res) => {
+  var abort = false;
+  var people = database.db("people");
+
+  var id = req.query.id;
+
+  var data = {}
+
+  var user = id[0];
+  var friend = id[1];
+
+  console.log(user + " is sending a walk request to: " + friend);
+
+  var query1 = {username : user};
+  var query2 = {username : friend};
+
+  var alreadySent = false;
+
+  if (friend != undefined) {
+    console.log("here");
+    people.collection("user").find(query2).toArray(function(err, result20) {
+      console.log("result:" + result20 + ".");
+      if (err) {
+        console.log("err");
+        throw err;
+      }
+      if (result20 == "") {
+          console.log("blank");
+          abort = true;
+          console.log("abort: "+ abort);
+          data = {"status": "error finding user"};
+      }
+    })
+} else {
+    abort = true;
+}
+
+console.log("abort: " + abort);
+
+if (abort == false) {
+    people.collection("walk requests").find(query1).toArray(function(err, result) {
+      if (err) {
+        data = {"status": "error finding user"};
+        throw err;
+      } else if (result != "") {
+        var sent = result[0].sent;
+
+        for (var i = 0; i < sent.length; i++) {
+          if (sent[i] == friend) {
+            alreadySent = true;
+          }
+        }
+
+        if (!alreadySent) {
+          sent.push(friend);
+
+          var sentList = { $set: {sent : sent} };
+
+          people.collection("walk requests").updateOne(query1, sentList, function(err, result2) {
+            if (err) {
+              data = {"status": "error finding user"};
+              throw err;
+            } else {
+              people.collection("walk requests").find(query2).toArray(function(err, result3) {
+                if (err) {
+                  data = {"status": "error finding user"};
+                  throw err;
+                } else if (result3 != "") {
+                    data = {"status": "walk request sent"};
+                  var received = result3[0].received;
+                  received.push(user);
+
+                  var receivedList = { $set: {received : received} };
+
+                  people.collection("walk requests").updateOne(query2, receivedList, function(err, result4) {
+                    if (err) {
+                      throw err;
+                    } else {
+                      data = ({"status": "sent"});
+                    }
+                  });
+                } else {
+                    data = {"status": "couldn't find user"};
+                }
+              });
+            }
+          });
+        } else {
+            data = {"status": "walk request already sent"};
+        }
+      } else {
+        data = {"status": "couldn't find user"};
+      }
+      res.json(data);
+    });
+    console.log(data);
+  }
+});
+
+
+
+//searches for a friend and sends a friend request to them
+app.use('/acceptwalkrequest', (req, res) => {
+  var people = database.db("people");
+
+  var id = req.query.id;
+
+  var data = {}
+
+  var user = id[0];
+  var friend = id[1];
+
+  var query1 = {username : user};
+  var query2 = {username : friend};
+
+  console.log(user + " is accepting " + friend + "'s walk request");
+
+  if (friend != undefined) {
+    people.collection("history").find(query1).toArray(function(err, result) {
+      if (err) {
+        throw err;
+      } else if (result != "") {
+        var walks = result[0].walks;
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+        var walk = {friend, date};
+        console.log(walk);
+        walks.push(walk);
+        var walks = { $set: {walks : walks} };
+
+        people.collection("history").updateOne(query1, walks, function(err, result2) {
+          if (err) {
+            throw err;
+          } else {
+            people.collection("history").find(query2).toArray(function(err, result3) {
+              if (err) {
+                throw err;
+              } else if (result3 != "") {
+                var walks = result3[0].walks;
+                var walk = {user, date};
+                console.log(walk);
+                walks.push(walk);
+                var walks = { $set: {walks : walks} };
+
+                people.collection("history").updateOne(query2, walks, function(err, result4) {
+                  if (err) {
+                    throw err;
+                  } else {
+                    data = {"status": "successfully accepted"};
+                  }
+                });
+              } else {
+                data = {"status": "couldn't find user"};
+              }
+            });
+          }
+        });
+      } else {
+        data = {"status": "couldn't find user"};
+      }
+      res.json(data);
+    });
+  }
+});
+
+
 //gets list of friends
 app.use('/getfriends', (req, res) => {
   var people = database.db("people");
@@ -263,6 +453,28 @@ app.use('/getfriends', (req, res) => {
       res.redirect("/?message=Could not get friends");
     }
   });
+});
+
+//gets list of friends
+app.use('/getIncomingWalkRequests', (req, res) => {
+  var people = database.db("people");
+
+  var username = req.query.id;
+  var query = { username: username};
+
+
+  console.log(username + " is looking for her walk requests");
+
+  people.collection("walk requests").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.json({ received: result[0].received });
+    } else {
+      res.redirect("/?message=Could not get friends");
+    }
+  });
+
 });
 
 //gets list of friends

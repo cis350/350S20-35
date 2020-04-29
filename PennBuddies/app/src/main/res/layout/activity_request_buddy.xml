@@ -10,38 +10,101 @@
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
         android:text="Request a buddy from your friends"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="20dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.127" />
+        app:layout_constraintVertical_bias="0.088" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="321dp"
+        android:layout_height="236dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label"
+        app:layout_constraintVertical_bias="0.096" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label"
+        app:layout_constraintVertical_bias="0.133" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Accept a friend's walk request"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.385" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="317dp"
+        android:layout_height="136dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.441"></LinearLayout>
+
+    <Button
+        android:id="@+id/upcoming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="upcomingWalks"
+        android:text="Past + Upcoming Walks"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toEndOf="@+id/manage"
+        app:layout_constraintTop_toBottomOf="@+id/label"
+        app:layout_constraintVertical_bias="0.902" />
 
     <Button
         android:id="@+id/manage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="manageFriends"
-        android:text="Manage Friend Requests"
+        android:text="Manage Friends"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.118"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label"
-        app:layout_constraintVertical_bias="0.883" />
+        app:layout_constraintVertical_bias="0.902" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="322dp"
-        android:layout_height="335dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/manage"
+    <TextView
+        android:id="@+id/walkRequestResultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label"
-        app:layout_constraintVertical_bias="0.47"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

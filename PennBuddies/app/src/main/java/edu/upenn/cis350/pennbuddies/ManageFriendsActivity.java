@@ -71,7 +71,6 @@ public class ManageFriendsActivity extends AppCompatActivity {
 
     private class acceptRequest extends AsyncTask<String, Void, Void> {
 
-        LinearLayout linlay;
         private String result;
 
         @Override
@@ -148,7 +147,7 @@ public class ManageFriendsActivity extends AppCompatActivity {
         LinearLayout linearLayout;
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(String... params)  {
             String friendUsername = params[0];
             try {
                 Log.e("Connection", "Connecting to HTTPS");
@@ -209,13 +208,13 @@ public class ManageFriendsActivity extends AppCompatActivity {
                                 textView.setText(incomingRequests.get(i));
                                 textView.setTextSize(15);
                                 textView.setOnClickListener(new OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        v.setVisibility(View.GONE);
-                                        currUser.friends.add(textView.getText().toString());
-                                        new acceptRequest().execute(textView.getText().toString());
-                                    }
-                                });
+                                @Override
+                                public void onClick(View v) {
+                                    v.setVisibility(View.GONE);
+                                    currUser.friends.add(textView.getText().toString());
+                                    new acceptRequest().execute(textView.getText().toString());
+                                }
+                            });
                                 linearLayout.addView(textView);
                             }
                         }
