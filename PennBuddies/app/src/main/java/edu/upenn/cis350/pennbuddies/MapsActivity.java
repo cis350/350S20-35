@@ -333,8 +333,6 @@ public class MapsActivity extends FragmentActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public boolean checkUserLocationPermission(){

@@ -48,7 +48,7 @@ public class UpcomingWalksActivity extends AppCompatActivity {
             try {
                 Log.e("Connection", "Connecting to HTTPS");
                 URL url = new URL("http://10.0.2.2:4000/currentUser?id="
-                        + currUser.getUsername());
+                        + currUser.getEmail());
                 Log.e("Connection", "Connected");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -77,10 +77,8 @@ public class UpcomingWalksActivity extends AppCompatActivity {
 
                     // typecasting obj to JSONObject
                     JSONObject userObject = (JSONObject) obj;
-
-                    JSONObject profile = (JSONObject) userObject.get("profile");
-                    Log.e("Here", "HERE");
-                    JSONArray arr = (JSONArray) profile.get("history");
+                    Log.e("Here", (String) obj.get("name"));
+                    JSONArray arr = (JSONArray) obj.get("history");
 
 
                     history = new ArrayList<JSONObject>();
@@ -102,7 +100,7 @@ public class UpcomingWalksActivity extends AppCompatActivity {
                                 TextView textView = new TextView(UpcomingWalksActivity.this);
                                 JSONObject obj = history.get(i);
                                 try{
-                                    buddyName = (String) obj.get("name");
+                                    buddyName = (String) obj.get("friend");
                                     buddyDate = (String) obj.get("date");
                                 } catch (Exception e) {
                                     Log.e("Connection", e.toString());
