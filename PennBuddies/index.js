@@ -405,7 +405,7 @@ app.use('/acceptwalkrequest', (req, res) => {
                 throw err;
               } else if (result3 != "") {
                 var walks = result3[0].walks;
-                var walk = {user, date};
+                var walk = {friend, date};
                 console.log(walk);
                 walks.push(walk);
                 var walks = { $set: {walks : walks} };
