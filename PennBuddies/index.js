@@ -550,6 +550,25 @@ app.use('/getRecentAcceptedBuddyRequest', (req, res) => {
   });
 });
 
+//get building hours
+app.use('/getBuildingHours', (req, res) => {
+  var hours = database.db("Hours");
+  var buildingHours = [];
+
+  hours.collection("building").find({}).toArray(function(err, result) {
+    if (err){
+      throw err;
+    } else if (result != null){
+      result.forEach( (doc) => {
+        buildingHours.push({'name': doc.name, 'hours': doc.hours});
+      });
+      res.json(buildingHours);
+    } else{
+      res.redirect('/?message=Could not get building hours');
+    }
+  });
+});
+
 // This is the '/test' endpoint that you can use to check that this works
 // Do not change this, as you will want to use it to check the test code in Part 2
 app.use('/test', (req, res) => {
