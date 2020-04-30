@@ -90,7 +90,7 @@ app.use('/currentUser', (req, res) => {
           }
           res.json(
             {'name' : name,
-            'username': username, 
+            'username': username,
             'password' : password,
             'email' : email,
             'hair' : hair,
@@ -525,6 +525,27 @@ app.use('/getOfficerLocations', (req, res) => {
       res.json(officers);
     } else{
       res.redirect('/?message=Could not get police officer locations');
+    }
+  });
+});
+
+//get most recent buddy request that was accept
+app.use('/getRecentAcceptedBuddyRequest', (req, res) => {
+  var people = database.db("people");
+  var requestInfo = [];
+  var username = req.query.id;
+  var query = { username: username};
+
+  people.collection("history").find(query).toArray(function(err, result) {
+    if (err){
+      throw err;
+    } else if (result != null){
+      result.forEach( (doc) => {
+        requestInfo.push({'history': doc.walks[doc.walks.length-1]});
+      });
+      res.json(requestInfo);
+    } else{
+      res.redirect('/?message=Could not get recently approved buddy request');
     }
   });
 });
