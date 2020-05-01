@@ -405,62 +405,16 @@ app.use('/acceptwalkrequest', (req, res) => {
                 throw err;
               } else if (result3 != "") {
                 var walks = result3[0].walks;
-                var walk = {friend, date};
+                var walk = {user, date};
                 console.log(walk);
                 walks.push(walk);
                 var walks = { $set: {walks : walks} };
+
                 people.collection("history").updateOne(query2, walks, function(err, result4) {
                   if (err) {
                     throw err;
                   } else {
-                      people.collection("walk requests").find(query1).toArray(function(err, resultReceived) {
-                        console.log("result: " + resultReceived)
-                        if (err) {
-                          throw err;
-                        } else if (resultReceived != "") {
-                          var received = resultReceived[0].received;
-                          for (let i = 0; i < received.length; i++){
-                            let val = received[i].toString();
-                            console.log("VAL: " + val);
-                            if (val == friend) {
-                              received.splice(i, 1);
-                            }
-                          }
-                          var received = { $set: {received : received} };
-                          people.collection("walk requests").updateOne(query1, received, function(err, resultReceived) {
-                            if (err) {
-                              throw err;
-                            } else {
-                              people.collection("walk requests").find(query2).toArray(function(err, resultSent) {
-                                console.log("result: " + resultSent)
-                                if (err) {
-                                  throw err;
-                                } else if (resultSent != "") {
-                                  var sent = resultSent[0].sent;
-                                  for (let i = 0; i < sent.length; i++){
-                                    let val = sent[i].toString();
-                                    console.log("VAL: " + val);
-                                    if (val == user) {
-                                      sent.splice(i, 1);
-                                    }
-                                  }
-                                  var sent = { $set: {sent : sent} };
-                                  people.collection("walk requests").updateOne(query2, sent, function(err, resultSent) {
-                                    if (err) {
-                                      throw err;
-                                    }
-                                  })
-                                }
-                              })
-                            }
-                          })
-                        }
-                      })
-
-
-
                     data = {"status": "successfully accepted"};
-
                   }
                 });
               } else {
@@ -614,6 +568,7 @@ app.use('/getBuildingHours', (req, res) => {
     }
   });
 });
+
 
 // This is the '/test' endpoint that you can use to check that this works
 // Do not change this, as you will want to use it to check the test code in Part 2

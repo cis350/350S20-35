@@ -1,5 +1,6 @@
 package edu.upenn.cis350.pennbuddies;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +26,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.bson.Document;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 
 public class OnDutyPoliceActivity extends AppCompatActivity {
@@ -44,21 +51,18 @@ public class OnDutyPoliceActivity extends AppCompatActivity {
         view3 = (TextView) findViewById(R.id.onDuty3);
     }
 
-    public void onMorningClick(View v){
-        view1.setText("Officer 2: 39th & Walnut (5 am - 11 am)");
-        view2.setText("Officer 5: Upper Quad Gate (6 am - 12 pm)");
-        view3.setText("Officer 8: Hill College House (8 am - 11 am)");
+    public void on34thAndWalnutClick(View v){
+        view1.setText("Officer John Smith: 9 AM - 3 PM");
+        view2.setText("Officer Bob Williams: 3 PM - 9 PM");
     }
 
-    public void onAfternoonClick(View v){
-        view1.setText("Officer 3: 39th & Walnut (12 pm - 6 pm)");
-        view2.setText("Officer 6: Upper Quad Gate (12 pm - 4 pm)");
-        view3.setText("Officer 9: Hill College House (12 pm - 7 pm)");
+    public void on40thAndWalnutClick(View v){
+        view1.setText("Officer Robert James: 3 PM - 9 PM");
+        view2.setText("");
     }
 
-    public void onEveningClick(View v){
-        view1.setText("Officer 4: 39th & Walnut (6 pm -  12 am)");
-        view2.setText("Officer 7: Upper Quad Gate (4 pm - 12 am)");
-        view3.setText("Officer 10: Hill College House (8 pm - 4 am)");
+    public void on39thAndSansomClick(View v){
+        view1.setText("Officer Thomas Brown: 3 PM - 9 PM");
+        view2.setText("");
     }
 }
