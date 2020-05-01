@@ -40,7 +40,7 @@ public class RequestBuddyActivity extends AppCompatActivity {
 
         this.currUser = MainActivity.currUser;
 
-        new getRecentRequest().execute(currUser.getUsername());
+        //new getRecentRequest().execute(currUser.getUsername());
         new getFriends().execute(currUser.getUsername());
         new getIncomingRequests().execute(currUser.getUsername());
 
@@ -52,85 +52,6 @@ public class RequestBuddyActivity extends AppCompatActivity {
 
     public void upcomingWalks(View view) {
         startActivity(new Intent(RequestBuddyActivity.this, UpcomingWalksActivity.class));
-    }
-
-    private class getRecentRequest extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            String friendUsername = params[0];
-            try {
-                Log.e("Connection", "Connecting to HTTPS");
-                URL url = new URL("http://10.0.2.2:4000/getRecentAcceptedBuddyRequest?id="
-                        + currUser.getUsername());
-                Log.e("Connection", "Connected");
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.connect();
-                InputStream inputStream;
-                int responsecode = conn.getResponseCode();
-                if (responsecode != 200) {
-                    throw new IllegalStateException();
-                } else {
-                    inputStream = conn.getInputStream();
-
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(
-                                    inputStream));
-
-                    StringBuilder response = new StringBuilder();
-                    String currentLine;
-
-                    while ((currentLine = in.readLine()) != null){
-                        response.append(currentLine);
-                    }
-                    String info = response.toString();
-                    info = info.substring(1, info.length()-2);
-                    info = info.substring(11);
-                    Log.e("info", info);
-                    JSONObject object = new JSONObject(info);
-                    JSONObject requestInfo = (JSONObject)object;
-
-                    String name;
-                    if (requestInfo.has("friend")){
-                        name = (String) requestInfo.getString("friend");
-                    } else{
-                        name = (String)requestInfo.getString("user");
-                    }
-                    String date = (String) requestInfo.getString("date");
-
-                    in.close();
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            NotificationManager mNotificationManager =
-                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                NotificationChannel channel = new NotificationChannel("YOUR_CHANNEL_ID",
-                                        "YOUR_CHANNEL_NAME",
-                                        NotificationManager.IMPORTANCE_DEFAULT);
-                                channel.setDescription("YOUR_NOTIFICATION_CHANNEL_DESCRIPTION");
-                                mNotificationManager.createNotificationChannel(channel);
-                            }
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
-                                    .setSmallIcon(R.drawable.logo) // notification icon
-                                    .setContentTitle("Your walking buddy request was accepted!") // title for notification
-                                    .setContentText(name + " accepted on " + date + "!")// message for notification
-                                    .setAutoCancel(true); // clear notification after click
-                            Intent intent = new Intent(getApplicationContext(), RequestBuddyActivity.class);
-                            PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                            mBuilder.setContentIntent(pi);
-                            mNotificationManager.notify(0, mBuilder.build());
-                        }
-                    });
-
-                }
-            } catch (Exception e) {
-                Log.e("Connection", e.toString());
-            }
-            return null;
-        }
     }
 
     private class getFriends extends AsyncTask<String, Void, Void> {

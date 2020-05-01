@@ -75,8 +75,7 @@ app.post('/checksignup', (req, res) => {
   var walkrequestentry = {username : username, sent : [], received : []};
   var policescheduleentry = {Name: name, Start : start, End : end, Location : location};
   var escortscheduleentry = {Name: name, Start : start, End : end};
-
-
+  
 
   people.collection("user").find(query).toArray(function(err, result) {
     if (err) {
