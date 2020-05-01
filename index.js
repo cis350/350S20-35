@@ -159,8 +159,23 @@ app.get('/editprofile', (req, res) => {
 
 //renders profile page
 app.get('/loadprofile', (req, res) => {
-  res.render('loadprofile.ejs', {req: req, message: null});
+
+  var people = database.db("people");
+
+  var currUser = req.session.currUser;
+
+  people.collection("user").find({ username: currUser }).toArray(function(err, result) {
+
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      res.render('loadprofile.ejs', {req: req, message: null});
+    } else {
+      res.redirect("/?message=Could not load profile");
+    }
+  });
 });
+
 
 //gets profile data
 app.get('/getprofile', (req, res) => {
@@ -193,6 +208,7 @@ app.post('/checkeditprofile', (req, res) => {
       throw err;
     } else if (result != "") {
       var newValues = req.body;
+      console.log(newValues);
       var vals = (JSON.stringify(newValues)).split(',');
 
       var valString = "{ ";
@@ -222,6 +238,34 @@ app.post('/checkeditprofile', (req, res) => {
     }
   });
 });
+
+//updates profile pic
+app.post('/checkeditprofilePic', (req, res) => {
+  var people = database.db("people");
+  var hours = database.db("Hours");
+
+  var user = req.session.currUser;
+  var query = { username: user };
+
+  people.collection("user").find(query).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    } else if (result != "") {
+      var newValues = req.body;
+      console.log(newValues);
+
+
+      people.collection("user").updateOne(query, myobj, function(err, result2) {
+        if (err) throw err;
+        res.redirect("/loadprofile");
+      });
+    } else {
+      res.redirect("/?message=Could not find user");
+    }
+  });
+});
+
+
 
 //searches for a friend and sends a friend request to them
 app.post('/sendfriendrequest', (req, res) => {
@@ -624,6 +668,12 @@ var escortArray = [];
 app.use('/loadresources', (req, res) => {
   res.render('resources.ejs', {req: req, message: null});
 });
+
+//renders profile pic page
+app.use('/loadProfilePic', (req, res) => {
+  res.render('profilePic.ejs', {req: req, message: null});
+});
+
 
 //searches for a user
 app.use('/searchuser', (req, res) => {

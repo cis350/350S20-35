@@ -121,12 +121,23 @@
 	        height: auto;
 	        padding: 15px;
 	      }
+
+				#profile-pic {
+				    width: 150px;
+				    height: 150px;
+				}
+
+				#profile-pic img {
+				    width: 150px;
+				    height: 150px;
+				}
 	      .row.content {height:auto;}
 	    }
 	  </style>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
       $(document).ready(function() {
+
         updateProfile();
 				updateFriends();
       })
@@ -135,6 +146,8 @@
         $.get("/getsearchprofile/?username=" + "<%=user%>" + "&friends=" + "<%=friends%>", function(data) {
           var profile = data.profile;
 					var alreadyFriends = data.friends;
+
+
 
           var string = '<div class="profile-list"><ul class="list-group">';
           string += '<li class="list-group-item"><b>Username: </b>' + profile.username + '</li>';
@@ -192,6 +205,7 @@
 			        <li><a href="/loadprofile">Profile</a></li>
 							<li><a href="/loadhistory">History</a></li>
 			        <li><a href="/loadresources">Resources</a></li>
+							<li><a href="/loadProfilePic">Upload Profile Picture</a></li>
 							<li><a href="https://www.facilities.upenn.edu/maps">Campus Map!</a></li>
 			      </ul>
 						<ul class="nav navbar-nav navbar-right">
@@ -216,6 +230,10 @@
 										<strong>Warning!</strong> <%= req.query.message %>
 									</div>
 							<% } %>
+						</div>
+
+						<div id="profile-pic">
+							 <image id="image-block" src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"eight="300" width="300" />
 						</div>
 
 						<%if (friends == true) { %>

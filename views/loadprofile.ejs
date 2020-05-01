@@ -118,24 +118,57 @@
 	        height: auto;
 	        padding: 15px;
 	      }
+
+								#imageUpload
+				{
+				    display: none;
+				}
+
+				#image
+				{
+				    cursor: pointer;
+				}
+
+				#profile-pic {
+				    width: 150px;
+				    height: 150px;
+
+				}
+
+				#profile-pic img {
+				    width: 150px;
+				    height: 150px;
+				}
 	      .row.content {height:auto;}
 	    }
 	  </style>
-//upload profile pic
 
 
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
       $(document).ready(function() {
+				getPic();
         updateProfile();
       })
+
+			      function getPic() {
+			        $.get("/getprofile", function(data) {
+			          var profile = data.profile;
+
+			          var string =  profile.profilePic ;
+
+			          return $("#image-block").html(string);
+			        });
+			      }
 
 
 
       function updateProfile() {
         $.get("/getprofile", function(data) {
           var profile = data.profile;
+
+
 
           var string = '<div class="profile-list"><ul class="list-group">';
           string += '<li class="list-group-item"><b>Student ID: </b>' + profile._id + '</li>';
@@ -179,6 +212,7 @@
 			        <li><a href="/loadprofile">Profile</a></li>
 							<li><a href="/loadhistory">History</a></li>
 			        <li><a href="/loadresources">Resources</a></li>
+							<li><a href="/loadProfilePic">Upload Profile Picture</a></li>
 							<li><a href="https://www.facilities.upenn.edu/maps">Campus Map!</a></li>
 			      </ul>
 						<ul class="nav navbar-nav navbar-right">
@@ -205,11 +239,21 @@
 							<% } %>
 						</div>
 
+						<div id="profile-pic">
+							 <image id="image-block" src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"eight="300" width="300" />
+						</div>
+
+
+
 						<div id="profile-display">
 							<br>
 							<div id="profile-block" onload="updateProfile()">
 							</div>
 						</div>
+
+
+
+
 
 						<div class="editprofile">
 							<form method="get" action="/editprofile">
